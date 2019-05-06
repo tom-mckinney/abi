@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Abi.Models
 {
-    class Encounter
+    public class Encounter : BaseEntity
     {
     }
 }

@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OrchardCore.Module.Targets" Version="1.0.0-beta3-71285" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Abi\Abi.csproj" />
+  </ItemGroup>
+
+</Project>
