@@ -5,6 +5,7 @@
     Author = "Tom McKinney, UpstreamCode",
     Website = "https://upstreamcode.com",
     Version = "0.0.1",
-    Description = "A/B testing framework",
-    Category = "UpstreamCode"
+    Description = "Enables features for multivariate user testing using Abi (Analytics and Business Insights).",
+    Category = "UpstreamCode",
+    Dependencies = new string[] { "OrchardCore.Liquid" }
 )]

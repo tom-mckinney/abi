@@ -11,14 +11,14 @@ namespace Abi.OrchardCore.Middleware
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (!context.Request.Headers.TryGetValue(Constants.ExperimentHeader, out StringValues experiment))
+            if (!context.Request.Cookies.ContainsKey(Constants.ExperimentHeader))
             {
                 var random = new Random().Next(2);
 
-                experiment = random.ToString();
-            }
+                string experiment = random.ToString();
 
-            context.Response.Headers.Add(Constants.ExperimentHeader, experiment);
+                context.Response.Cookies.Append(Constants.ExperimentHeader, experiment);
+            }
 
             await next(context);
         }
