@@ -18,9 +18,12 @@ namespace Abi.OrchardCore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (!await _authorizationService.AuthorizeAsync(User, Permissions))
+            //if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageOwnExperiments))
+            //{
+            //    return Unauthorized();
+            //}
 
-            return Content("Wumbo");
+            return View();
         }
     }
 }
