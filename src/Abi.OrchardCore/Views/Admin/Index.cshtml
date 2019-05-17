@@ -1,3 +1,16 @@
-﻿<div>
-    Test
-</div>
+﻿@model IList<ExperimentShape>
+@using Abi.OrchardCore.Data
+@{ 
+    var pageTitle = T["Experiments"];
+}
+
+<h1>@pageTitle</h1>
+
+<ul class="list-group">
+    @foreach (var experiment in Model)
+    {
+        <li class="list-group-item">
+            @await DisplayAsync(await New.Experiment_Summary(experiment.ContentItem))
+        </li>
+    }
+</ul>

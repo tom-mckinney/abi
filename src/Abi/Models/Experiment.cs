@@ -6,5 +6,6 @@ namespace Abi.Models
 {
     public class Experiment : BaseEntity
     {
+        public string Name { get; set; }
     }
 }
