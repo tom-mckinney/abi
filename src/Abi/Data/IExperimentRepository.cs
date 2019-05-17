@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Abi.Data
 {
-    public interface IExperimentRepository
+    public interface IExperimentRepository<TModel> : IRepository<TModel> where TModel : class
     {
-        Task<IList<Experiment>> GetAllAsync();
     }
 }

@@ -1,14 +1,9 @@
-﻿using Abi.Data;
-using Abi.OrchardCore.Data;
+﻿using Abi.OrchardCore.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display;
-using OrchardCore.ContentManagement.Records;
 using OrchardCore.DisplayManagement.ModelBinding;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using YesSql;
 
@@ -18,22 +13,19 @@ namespace Abi.OrchardCore.Controllers
     {
         private readonly IAuthorizationService _authorizationService;
         private readonly IContentItemDisplayManager _contentItemDisplayManager;
-        private readonly IRepository<ExperimentShape> _experimentRepository;
-        private readonly ISession _session;
+        private readonly IExperimentRepository _experimentRepository;
 
         public AdminController(
             IAuthorizationService authorizationService,
             IContentItemDisplayManager contentItemDisplayManager,
-            IRepository<ExperimentShape> experimentRepository,
-            ISession session)
+            IExperimentRepository experimentRepository)
         {
             _authorizationService = authorizationService;
             _contentItemDisplayManager = contentItemDisplayManager;
             _experimentRepository = experimentRepository;
-            _session = session;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> List()
         {
             //if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageOwnExperiments))
             //{
@@ -45,7 +37,7 @@ namespace Abi.OrchardCore.Controllers
             var experimentSummaries = new List<dynamic>();
             foreach (var experiment in experiments)
             {
-                experimentSummaries.Add(await _contentItemDisplayManager.BuildDisplayAsync(experiment.ContentItem, this, "SummaryAdmin"));
+                experimentSummaries.Add(await _contentItemDisplayManager.BuildDisplayAsync(experiment, this, "SummaryAdmin"));
             }
 
             return View(experimentSummaries);

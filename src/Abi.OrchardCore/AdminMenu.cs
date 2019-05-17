@@ -26,7 +26,7 @@ namespace Abi.OrchardCore
             builder.Add(T["Experiments"], config => config
                 .AddClass("icon-class-fa-flask")
                 .AddClass("icon-class-fas")
-                .Action("Index", "Admin", new { area = "Abi.OrchardCore" }));
+                .Action("List", "Admin", new { area = "Abi.OrchardCore" }));
 
             return Task.CompletedTask;
         }

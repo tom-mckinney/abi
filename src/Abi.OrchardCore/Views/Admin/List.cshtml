@@ -1,0 +1,25 @@
+﻿@using Abi.Models
+@{ 
+    var pageTitle = T["Experiments"];
+    var createNewText = T["Create New Experiment"];
+}
+
+<h1>@pageTitle</h1>
+
+<p>
+    <a asp-route-area="OrchardCore.Contents" 
+       asp-route-action="Create" 
+       asp-route-id="@nameof(Experiment)" 
+       asp-route-returnUrl="@FullRequestPath" 
+       class="btn btn-primary" 
+       role="button">@createNewText</a>
+</p>
+
+<ul class="list-group">
+    @foreach (var experiment in Model)
+    {
+        <li class="list-group-item">
+            @await DisplayAsync(experiment)
+        </li>
+    }
+</ul>

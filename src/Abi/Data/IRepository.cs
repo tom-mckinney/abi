@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Abi.Data
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<TModel> where TModel : class
     {
-        Task<IList<T>> GetAllAsync();
+        Task<IEnumerable<TModel>> GetAllAsync();
     }
 }
