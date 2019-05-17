@@ -9,9 +9,8 @@
 <ul class="list-group">
     @foreach (var experiment in Model)
     {
-    <li class="list-group-item">
-        @await DisplayAsync(experiment)
-        @*@await DisplayAsync(await New.Experiment_Summary(experiment.ContentItem))*@
-    </li>
+        <li class="list-group-item">
+            @await DisplayAsync(experiment)
+        </li>
     }
 </ul>

@@ -49,14 +49,6 @@ namespace Abi.OrchardCore.Controllers
             }
 
             return View(experimentSummaries);
-
-            //var query = _session.Query<ContentItem, ContentItemIndex>();
-
-            //query = query.With<ContentItemIndex>(x => x.ContentType == nameof(Models.Experiment));
-
-            //var experiments = await query.ListAsync();
-
-            //return View(experiments);
         }
     }
 }

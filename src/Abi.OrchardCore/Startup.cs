@@ -1,9 +1,7 @@
 ﻿using Abi.Data;
 using Abi.OrchardCore.Data;
-using Abi.OrchardCore.Drivers;
 using Abi.OrchardCore.Filters;
 using Abi.OrchardCore.Middleware;
-using Abi.OrchardCore.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,9 +28,6 @@ namespace Abi.OrchardCore
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<AbiMiddleware>();
             services.AddScoped<IRepository<ExperimentShape>, ExperimentRepository>();
-
-            //services.AddSingleton<ContentPart, ExperimentContentPart>();
-            services.AddScoped<IContentDisplayDriver, ExperimentDisplayDriver>();
 
             services.AddLiquidFilter<AbiFilter>("abi");
         }

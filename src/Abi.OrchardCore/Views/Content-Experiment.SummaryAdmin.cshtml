@@ -1,22 +1,7 @@
-﻿@*@using OrchardCore.Mvc.Utilities
-
-@{
-    string name = Model.Metadata.Name;
-}
-
-@if (Model.Content != null)
-{
-    <h1>@Model.DisplayText</h1>
-
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">@T["Edit"]</a>
-    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm" itemprop="RemoveUrl UnsafeUrl">@T["Delete"]</a>
-}*@
-
-@using OrchardCore.ContentManagement
+﻿@using OrchardCore.ContentManagement
 @{
     ContentItem contentItem = Model.ContentItem;
 }
-<h1>Test</h1>
 <div class="properties">
     @if (Model.Actions != null)
     {
@@ -25,12 +10,12 @@
         </div>
     }
 
-    <div class="custom-control custom-checkbox float-left">
+    @*<div class="custom-control custom-checkbox float-left">
         <input type="checkbox" class="custom-control-input" value="@contentItem.Id" name="itemIds" id="itemIds-@contentItem.Id">
         <label class="custom-control-label" for="itemIds-@contentItem.Id">&nbsp;</label>
-    </div>
+    </div>*@
 
-    <a admin-for="@contentItem" asp-route-returnUrl="@FullRequestPath" /> - <small class="text-muted">@contentItem.ContentType</small>
+    <a admin-for="@contentItem" asp-route-returnUrl="@FullRequestPath" />
 
     @if (Model.Header != null)
     {
