@@ -3,7 +3,9 @@ using Abi.OrchardCore.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrchardCore.ContentManagement;
+using OrchardCore.ContentManagement.Display;
 using OrchardCore.ContentManagement.Records;
+using OrchardCore.DisplayManagement.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,15 +14,21 @@ using YesSql;
 
 namespace Abi.OrchardCore.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : Controller, IUpdateModel
     {
         private readonly IAuthorizationService _authorizationService;
+        private readonly IContentItemDisplayManager _contentItemDisplayManager;
         private readonly IRepository<ExperimentShape> _experimentRepository;
         private readonly ISession _session;
 
-        public AdminController(IAuthorizationService authorizationService, IRepository<ExperimentShape> experimentRepository, ISession session)
+        public AdminController(
+            IAuthorizationService authorizationService,
+            IContentItemDisplayManager contentItemDisplayManager,
+            IRepository<ExperimentShape> experimentRepository,
+            ISession session)
         {
             _authorizationService = authorizationService;
+            _contentItemDisplayManager = contentItemDisplayManager;
             _experimentRepository = experimentRepository;
             _session = session;
         }
@@ -32,7 +40,15 @@ namespace Abi.OrchardCore.Controllers
             //    return Unauthorized();
             //}
 
-            return View(await _experimentRepository.GetAllAsync());
+            var experiments = await _experimentRepository.GetAllAsync();
+
+            var experimentSummaries = new List<dynamic>();
+            foreach (var experiment in experiments)
+            {
+                experimentSummaries.Add(await _contentItemDisplayManager.BuildDisplayAsync(experiment.ContentItem, this, "SummaryAdmin"));
+            }
+
+            return View(experimentSummaries);
 
             //var query = _session.Query<ContentItem, ContentItemIndex>();
 
