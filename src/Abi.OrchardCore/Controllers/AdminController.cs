@@ -47,9 +47,9 @@ namespace Abi.OrchardCore.Controllers
         {
             var experiment = await _experimentRepository.GetAsync(contentItemId);
 
-            //var shape = await _contentItemDisplayManager.BuildDisplayAsync(experiment, this, "DisplayAdmin");
+            var shape = await _contentItemDisplayManager.BuildDisplayAsync(experiment, this, "DisplayAdmin");
 
-            return View(experiment);
+            return View(shape);
         }
     }
 }

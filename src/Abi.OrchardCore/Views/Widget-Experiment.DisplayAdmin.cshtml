@@ -1,0 +1,26 @@
+﻿@{
+    ContentItem contentItem = Model.ContentItem;
+    var contentVariants = contentItem.Get<OrchardCore.Flows.Models.BagPart>("Variants");
+}
+<div class="properties">
+    @if (Model.Actions != null)
+    {
+        <div class="related float-right">
+            @await DisplayAsync(Model.Actions)
+        </div>
+    }
+
+    <h1>@contentItem.DisplayText</h1>
+
+    @if (contentVariants?.ContentItems?.Count > 0)
+    {
+        foreach (var variant in contentVariants.ContentItems)
+        {
+            <h3>@variant.DisplayText</h3>
+        }
+    }
+    else
+    {
+        <p><small>No content variants</small></p>
+    }
+</div>
