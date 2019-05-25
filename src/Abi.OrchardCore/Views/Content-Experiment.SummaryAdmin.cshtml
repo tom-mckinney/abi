@@ -15,7 +15,7 @@
         <label class="custom-control-label" for="itemIds-@contentItem.Id">&nbsp;</label>
     </div>*@
 
-    <a admin-for="@contentItem" asp-route-returnUrl="@FullRequestPath" />
+    <a asp-route="DisplayExperiment" asp-route-contentItemId="@contentItem.ContentItemId">@contentItem.DisplayText</a>
 
     @if (Model.Header != null)
     {

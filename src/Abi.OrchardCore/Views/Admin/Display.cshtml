@@ -1,12 +1,12 @@
 ﻿@using Abi.Models
 @{ 
-    var pageTitle = T["Experiments"];
+    var pageTitle = T["Experiment Details"];
     var createNewText = T["Create Experiment"];
 }
 
 <h1>@pageTitle</h1>
 
-<p>
+@*<p>
     <a asp-route-area="OrchardCore.Contents" 
        asp-route-action="Create" 
        asp-route-id="@nameof(Experiment)" 
@@ -22,4 +22,6 @@
             @await DisplayAsync(experiment)
         </li>
     }
-</ul>
+</ul>*@
+
+@await  DisplayAsync(Model)

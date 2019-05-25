@@ -38,6 +38,12 @@ namespace Abi.OrchardCore
                 areaName: "Abi.OrchardCore",
                 template: "/Admin/Experiments",
                 defaults: new { controller = "Admin", action = "List" });
+
+            routes.MapAreaRoute(
+                name: "DisplayExperiment",
+                areaName: "Abi.OrchardCore",
+                template: "/Admin/Experiments/{contentItemId}",
+                defaults: new { controller = "Admin", action = "Display" });
         }
     }
 }
