@@ -1,9 +1,12 @@
 ﻿using Abi.OrchardCore.Data;
+using Abi.OrchardCore.Drivers;
 using Abi.OrchardCore.Filters;
 using Abi.OrchardCore.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.Data.Migration;
 using OrchardCore.Liquid;
 using OrchardCore.Modules;
@@ -17,9 +20,17 @@ namespace Abi.OrchardCore
     {
         public override void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+
+            services.AddScoped<IExperimentManager, OrchardExperimentManager>();
+            services.AddSingleton<ContentBalancer>();
+
             services.AddScoped<IDataMigration, Migrations>();
             services.AddScoped<IPermissionProvider, Permissions>();
             services.AddScoped<INavigationProvider, AdminMenu>();
+            services.AddScoped<IContentDisplayDriver, ExperimentDriver>();
+            services.AddScoped<IContentPartDisplayDriver, VariantBagPartDisplayDriver>();
+
             services.AddScoped<AbiMiddleware>();
 
             // Repositories
