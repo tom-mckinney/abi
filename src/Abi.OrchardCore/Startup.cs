@@ -22,16 +22,13 @@ namespace Abi.OrchardCore
         {
             services.AddHttpContextAccessor();
 
-            services.AddScoped<IExperimentManager, OrchardExperimentManager>();
             services.AddSingleton<ContentBalancer>();
+            services.AddScoped<IExperimentManager, OrchardExperimentManager>();
+            services.AddScoped<IContentPartDisplayDriver, VariantBagPartDisplayDriver>();
 
             services.AddScoped<IDataMigration, Migrations>();
             services.AddScoped<IPermissionProvider, Permissions>();
             services.AddScoped<INavigationProvider, AdminMenu>();
-            services.AddScoped<IContentDisplayDriver, ExperimentDriver>();
-            services.AddScoped<IContentPartDisplayDriver, VariantBagPartDisplayDriver>();
-
-            services.AddScoped<AbiMiddleware>();
 
             // Repositories
             services.AddScoped<IExperimentRepository, ExperimentRepository>();
@@ -42,8 +39,6 @@ namespace Abi.OrchardCore
 
         public override void Configure(IApplicationBuilder builder, IRouteBuilder routes, IServiceProvider serviceProvider)
         {
-            builder.UseMiddleware<AbiMiddleware>();
-
             routes.MapAreaRoute(
                 name: "ListExperiments",
                 areaName: "Abi.OrchardCore",
