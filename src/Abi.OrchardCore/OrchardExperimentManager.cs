@@ -3,7 +3,9 @@ using OrchardCore.ContentManagement;
 using OrchardCore.Flows.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Abi.OrchardCore
 {
@@ -22,25 +24,21 @@ namespace Abi.OrchardCore
             _contentBalancer = contentBalancer;
         }
 
-        public int GetVariantIndex(BagPart content)
+        public Task<BagPart> GetOrSetVariantAsync(BagPart content)
         {
-            int variantIndex = -1;
             string cookieName = $"abi_{content.ContentItem.ContentItemId}";
 
-            if (_httpContext.Request.Cookies.TryGetValue(cookieName, out string cookieValue))
+            if (!_httpContext.Request.Cookies.TryGetValue(cookieName, out string variantContentId) || !content.ContentItems.Any(c => c.ContentItemId == variantContentId))
             {
-                variantIndex = int.Parse(cookieValue);
-            }
-            else
-            {
-                variantIndex = _contentBalancer.GetRandomIndex(content.ContentItems);
+                int variantIndex = _contentBalancer.GetRandomIndex(content.ContentItems); // TODO: make this personalized/influenced by history
+                variantContentId = content.ContentItems.ElementAt(variantIndex).ContentItemId;
             }
 
-            cookieValue = variantIndex.ToString();
+            _httpContext.Response.Cookies.Append(cookieName, variantContentId);
 
-            _httpContext.Response.Cookies.Append(cookieName, cookieValue);
+            content.ContentItems.RemoveAll(c => c.ContentItemId != variantContentId);
 
-            return variantIndex;
+            return Task.FromResult(content);
         }
     }
 }

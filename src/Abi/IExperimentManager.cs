@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Threading.Tasks;
 
 namespace Abi
 {
     public partial interface IExperimentManager<TModel> where TModel : class
     {
-        int GetVariantIndex(TModel content);
+        Task<TModel> GetOrSetVariantAsync(TModel content);
     }
 }
