@@ -1,6 +1,8 @@
-﻿@{
+﻿@using OrchardCore.Flows.Models
+@{
     ContentItem contentItem = Model.ContentItem;
-    var contentVariants = contentItem.Get<OrchardCore.Flows.Models.BagPart>("Variants");
+    
+    var contentVariants = contentItem.Get<BagPart>("BagPart");
 }
 <div class="properties">
     @if (Model.Actions != null)
@@ -14,10 +16,12 @@
 
     @if (contentVariants?.ContentItems?.Count > 0)
     {
-        foreach (var variant in contentVariants.ContentItems)
-        {
-            <h3>@variant.DisplayText</h3>
-        }
+        <ul class="list-group">
+            @foreach (var variant in contentVariants.ContentItems)
+            {
+                <li class="list-group-item">@variant.DisplayText</li>
+            }
+        </ul>
     }
     else
     {

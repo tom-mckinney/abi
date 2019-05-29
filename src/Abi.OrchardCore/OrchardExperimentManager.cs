@@ -28,7 +28,8 @@ namespace Abi.OrchardCore
         {
             string cookieName = $"abi_{content.ContentItem.ContentItemId}";
 
-            if (!_httpContext.Request.Cookies.TryGetValue(cookieName, out string variantContentId) || !content.ContentItems.Any(c => c.ContentItemId == variantContentId))
+            if (!_httpContext.Request.Cookies.TryGetValue(cookieName, out string variantContentId)
+                || !content.ContentItems.Any(c => c.ContentItemId == variantContentId))
             {
                 int variantIndex = _contentBalancer.GetRandomIndex(content.ContentItems); // TODO: make this personalized/influenced by history
                 variantContentId = content.ContentItems.ElementAt(variantIndex).ContentItemId;
