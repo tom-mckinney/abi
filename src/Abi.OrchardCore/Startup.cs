@@ -1,6 +1,7 @@
 ﻿using Abi.OrchardCore.Data;
 using Abi.OrchardCore.Drivers;
 using Abi.OrchardCore.Filters;
+using Abi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -22,6 +23,7 @@ namespace Abi.OrchardCore
             services.AddHttpContextAccessor();
 
             services.AddSingleton<ContentBalancer>();
+            services.AddScoped<ICookieService, CookieService>();
             services.AddScoped<IExperimentManager, OrchardExperimentManager>();
             services.AddScoped<IContentPartDisplayDriver, VariantBagPartDisplayDriver>();
 
