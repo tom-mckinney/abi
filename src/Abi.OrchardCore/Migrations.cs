@@ -1,4 +1,5 @@
 ﻿using Abi.Models;
+using Abi.OrchardCore.Models;
 using OrchardCore.ContentManagement.Metadata;
 using OrchardCore.ContentManagement.Metadata.Settings;
 using OrchardCore.Data.Migration;
@@ -46,6 +47,17 @@ namespace Abi.OrchardCore
             );
 
             return 1;
+        }
+
+        public int UpdateFrom1()
+        {
+            _contentDefinitionManager.AlterPartDefinition(nameof(ContentVariantListPart), part => part
+                .Attachable());
+
+            _contentDefinitionManager.AlterTypeDefinition(nameof(Experiment), type => type
+                .WithPart(nameof(ContentVariantListPart)));
+
+            return 2;
         }
     }
 }
