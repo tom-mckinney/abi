@@ -1,0 +1,19 @@
+﻿@model OrchardCore.ContentFields.ViewModels.DisplayContentPickerFieldViewModel
+@inject OrchardCore.ContentManagement.IContentManager contentManager
+@inject OrchardCore.ContentManagement.Display.IContentItemDisplayManager ContentItemDisplayManager
+@inject OrchardCore.DisplayManagement.ModelBinding.IUpdateModelAccessor ModelUpdaterAccessor
+
+@if (Model?.ContentItemIds?.Length > 0)
+{
+    foreach (var id in Model.ContentItemIds)
+    {
+        var contentItem = await contentManager.GetAsync(id);
+
+        if (contentItem != null)
+        {
+            var itemContent = await ContentItemDisplayManager.BuildDisplayAsync(contentItem, ModelUpdaterAccessor.ModelUpdater);
+
+            @await DisplayAsync(itemContent)
+        }
+    }
+}

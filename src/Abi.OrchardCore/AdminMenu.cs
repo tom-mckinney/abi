@@ -23,10 +23,10 @@ namespace Abi.OrchardCore
                 return Task.CompletedTask;
             }
 
-            builder.Add(T["Experiments"], config => config
-                .AddClass("icon-class-fa-flask")
-                .AddClass("icon-class-fas")
-                .Action("List", "Admin", new { area = "Abi.OrchardCore" }));
+            //builder.Add(T["Experiments"], config => config
+            //    .AddClass("icon-class-fa-flask")
+            //    .AddClass("icon-class-fas")
+            //    .Action("List", "Admin", new { area = "Abi.OrchardCore" }));
 
             return Task.CompletedTask;
         }
