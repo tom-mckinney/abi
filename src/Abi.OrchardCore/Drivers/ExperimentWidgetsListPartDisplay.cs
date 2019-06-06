@@ -19,11 +19,6 @@ namespace Abi.OrchardCore.Drivers
         private readonly IExperimentManager _experimentManager;
 
         public ExperimentWidgetsListPartDisplay(IExperimentManager experimentManager)
-            //IContentManager contentManager,
-            //IContentDefinitionManager contentDefinitionManager,
-            //IServiceProvider serviceProvider,
-            //ISiteService siteService)
-            //: base(contentManager, contentDefinitionManager, serviceProvider, siteService)
         {
             _experimentManager = experimentManager;
         }

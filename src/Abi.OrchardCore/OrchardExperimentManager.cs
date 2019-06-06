@@ -26,24 +26,6 @@ namespace Abi.OrchardCore
             _contentBalancer = contentBalancer;
         }
 
-        //public Task<BagPart> GetOrSetVariantAsync(BagPart content)
-        //{
-        //    string experimentId = content.ContentItem.ContentItemId;
-
-        //    if (!_cookieService.TryGetExperimentCookie(experimentId, out string variantContentId)
-        //        || !content.ContentItems.Any(c => c.ContentItemId == variantContentId))
-        //    {
-        //        int variantIndex = _contentBalancer.GetRandomIndex(content.ContentItems); // TODO: make this personalized/influenced by history
-        //        variantContentId = content.ContentItems.ElementAt(variantIndex).ContentItemId;
-        //    }
-
-        //    _cookieService.AddExperimentCookie(experimentId, variantContentId);
-
-        //    content.ContentItems.RemoveAll(c => c.ContentItemId != variantContentId);
-
-        //    return Task.FromResult(content);
-        //}
-
         public Task<WidgetsListPart> GetOrSetVariantAsync(WidgetsListPart content)
         {
             string experimentId = content.ContentItem.ContentItemId;
@@ -64,15 +46,6 @@ namespace Abi.OrchardCore
 
                 widgetList.RemoveAll(c => c.ContentItemId != variantContentId);
             }
-
-            //if (!_cookieService.TryGetExperimentCookie(experimentId, out string variantContentId)
-            //    || !content.Widgets.Any(w => w.Value.Any(c => c.ContentItemId == variantContentId)))
-                //|| !content.ContentItems.Any(c => c.ContentItemId == variantContentId))
-            {
-                //int variantIndex = _contentBalancer.GetRandomIndex(content.ContentItems); // TODO: make this personalized/influenced by history
-                //variantContentId = content.ContentItems.ElementAt(variantIndex).ContentItemId;
-            }
-
 
             return Task.FromResult(content);
         }
