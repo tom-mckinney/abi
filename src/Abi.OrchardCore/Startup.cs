@@ -26,6 +26,7 @@ namespace Abi.OrchardCore
             services.AddScoped<ICookieService, CookieService>();
             services.AddScoped<IExperimentManager, OrchardExperimentManager>();
             services.AddScoped<IContentPartDisplayDriver, VariantBagPartDisplayDriver>();
+            services.AddScoped<IContentPartDisplayDriver, ExperimentWidgetsListPartDisplay>();
 
             services.AddScoped<IDataMigration, Migrations>();
             services.AddScoped<IPermissionProvider, Permissions>();

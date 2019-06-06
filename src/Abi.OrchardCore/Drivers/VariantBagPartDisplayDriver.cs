@@ -20,7 +20,7 @@ namespace Abi.OrchardCore.Drivers
         {
             if (context?.TypePartDefinition?.ContentTypeDefinition?.Name == nameof(Experiment) && context?.DisplayType == "Detail")
             {
-                part = await _experimentManager.GetOrSetVariantAsync(part);
+                //part = await _experimentManager.GetOrSetVariantAsync(part);
             }
 
             return await base.DisplayAsync(part, context);
