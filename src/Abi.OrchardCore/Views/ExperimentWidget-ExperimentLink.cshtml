@@ -11,9 +11,9 @@
 
         if (contentItem != null)
         {
-            var itemContent = await ContentItemDisplayManager.BuildDisplayAsync(contentItem, ModelUpdaterAccessor.ModelUpdater);
+            dynamic contentShape = await ContentItemDisplayManager.BuildDisplayAsync(contentItem, ModelUpdaterAccessor.ModelUpdater);
 
-            @await DisplayAsync(itemContent)
+            @await DisplayAsync(contentShape)
         }
     }
 }

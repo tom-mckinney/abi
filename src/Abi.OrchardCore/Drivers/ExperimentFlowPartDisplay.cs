@@ -1,29 +1,22 @@
 ﻿using Abi.Models;
-using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentManagement.Display.Models;
-using OrchardCore.ContentManagement.Metadata;
 using OrchardCore.DisplayManagement.Views;
-using OrchardCore.Settings;
-using OrchardCore.Widgets.Drivers;
-using OrchardCore.Widgets.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using OrchardCore.Flows.Models;
 using System.Threading.Tasks;
 
 namespace Abi.OrchardCore.Drivers
 {
-    public class ExperimentWidgetsListPartDisplay : ContentPartDisplayDriver<WidgetsListPart> //: WidgetsListPartDisplay
+    public class ExperimentFlowPartDisplay : ContentPartDisplayDriver<FlowPart>
     {
         private readonly IExperimentManager _experimentManager;
 
-        public ExperimentWidgetsListPartDisplay(IExperimentManager experimentManager)
+        public ExperimentFlowPartDisplay(IExperimentManager experimentManager)
         {
             _experimentManager = experimentManager;
         }
 
-        public override async Task<IDisplayResult> DisplayAsync(WidgetsListPart part, BuildPartDisplayContext context)
+        public override async Task<IDisplayResult> DisplayAsync(FlowPart part, BuildPartDisplayContext context)
         {
             if (context?.TypePartDefinition?.ContentTypeDefinition?.Name == nameof(Experiment) && context?.DisplayType == "Detail")
             {

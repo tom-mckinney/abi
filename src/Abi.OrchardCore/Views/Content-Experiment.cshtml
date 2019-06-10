@@ -1,15 +1,15 @@
 ﻿<div class="@String.Join(" ", Model.Classes.ToArray())">
     @if (Model.Header != null || Model.Meta != null)
     {
-        <div class="widget-header">
-            @*@await DisplayAsync(Model.Header)
+        @*<div class="widget-header">
+            @await DisplayAsync(Model.Header)
             @if (Model.Meta != null)
             {
                 <div class="widget-metadata">
                     @await DisplayAsync(Model.Meta)
                 </div>
-            }*@
-        </div>
+            }
+        </div>*@
     }
     <div class="widget-body">
         @await DisplayAsync(Model.Content)
