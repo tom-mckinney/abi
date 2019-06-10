@@ -1,4 +1,5 @@
 ﻿using Abi.Models;
+using Abi.OrchardCore.Data.Indexes;
 using Abi.OrchardCore.Models;
 using OrchardCore.ContentManagement.Metadata;
 using OrchardCore.ContentManagement.Metadata.Settings;
@@ -51,13 +52,16 @@ namespace Abi.OrchardCore
 
         public int UpdateFrom1()
         {
-            _contentDefinitionManager.AlterPartDefinition(nameof(ContentVariantListPart), part => part
-                .Attachable());
-
-            _contentDefinitionManager.AlterTypeDefinition(nameof(Experiment), type => type
-                .WithPart(nameof(ContentVariantListPart)));
-
             return 2;
+        }
+
+        public int UpdateFrom2()
+        {
+            SchemaBuilder.CreateMapIndexTable(nameof(EncounterIndex), table => table
+                .Column<int>(nameof(EncounterIndex.SessionId))
+                .Column<string>(nameof(EncounterIndex.ContentVariantId)));
+
+            return 3;
         }
     }
 }

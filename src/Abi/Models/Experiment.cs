@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Abi.Models
 {
-    public class Experiment : BaseEntity
+    public class Experiment : AbiEntity
     {
         public string Name { get; set; }
     }

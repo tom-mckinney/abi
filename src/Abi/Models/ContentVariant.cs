@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Abi.Models
 {
-    public class ContentVariant : BaseEntity
+    public class ContentVariant : AbiEntity
     {
     }
 }

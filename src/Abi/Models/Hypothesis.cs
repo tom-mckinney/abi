@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Abi.Models
 {
-    public class Hypothesis : BaseEntity
+    public class Hypothesis : AbiEntity
     {
     }
 }
