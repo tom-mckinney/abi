@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Abi.Data;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Abi.Models
 {
-    public abstract class AbiEntity
+    public abstract class AbiEntity : IEntity<int>
     {
         public int Id { get; set; }
 

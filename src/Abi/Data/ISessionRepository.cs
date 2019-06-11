@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Abi.Data
 {
-    public interface ISessionRepository : IRepository<Session>
+    public interface ISessionRepository : IRepository<Session, int>
     {
     }
 }

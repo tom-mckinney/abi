@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Abi.OrchardCore.Data
 {
-    public interface IExperimentRepository : IExperimentRepository<ContentItem>
+    public interface IExperimentRepository : IRepository<ContentItem, ContentItem, int>
     {
+        Task<ContentItem> GetByContentItemIdAsync(string id);
     }
 
     public class ExperimentRepository : IExperimentRepository
@@ -25,7 +26,12 @@ namespace Abi.OrchardCore.Data
             return _helper.GetRecentContentItemsByContentTypeAsync(nameof(Experiment));
         }
 
-        public Task<ContentItem> GetAsync(string id)
+        public Task<ContentItem> GetAsync(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ContentItem> GetByContentItemIdAsync(string id)
         {
             return _helper.GetContentItemByIdAsync(id);
         }

@@ -4,10 +4,18 @@ using System.Threading.Tasks;
 
 namespace Abi.Data
 {
-    public interface IRepository<TModel> where TModel : class
+    public interface IRepository<TInterface, TModel, TKey>
+        where TModel : TInterface
+        where TKey : struct
     {
         Task<IEnumerable<TModel>> GetAllAsync();
 
-        Task<TModel> GetAsync(string id);
+        Task<TModel> GetAsync(TKey id);
+    }
+
+    public interface IRepository<TModel, TKey> : IRepository<IEntity<TKey>, TModel, TKey>
+        where TModel : class, IEntity<TKey>
+        where TKey : struct
+    {
     }
 }

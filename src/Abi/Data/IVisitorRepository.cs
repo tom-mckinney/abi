@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Abi.Data
 {
-    public interface IVisitorRepository : IRepository<Visitor>
+    public interface IVisitorRepository : IRepository<Visitor, int>
     {
     }
 }

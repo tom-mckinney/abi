@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Abi.Data
 {
-    public interface IEncounterRepository : IRepository<Encounter>
+    public interface IEncounterRepository : IRepository<Encounter, int>
     {
     }
 }

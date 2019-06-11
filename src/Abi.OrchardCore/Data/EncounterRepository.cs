@@ -1,5 +1,6 @@
 ﻿using Abi.Data;
 using Abi.Models;
+using Abi.OrchardCore.Data.Indexes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,9 +23,9 @@ namespace Abi.OrchardCore.Data
             return _session.Query<Encounter>().ListAsync();
         }
 
-        public Task<Encounter> GetAsync(string id)
+        public Task<Encounter> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            return _session.Query<Encounter, EncounterIndex>(e => e.Id == id).FirstOrDefaultAsync();
         }
     }
 }
