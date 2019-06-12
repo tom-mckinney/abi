@@ -35,5 +35,10 @@ namespace Abi.OrchardCore.Data
         {
             return _helper.GetContentItemByIdAsync(id);
         }
+
+        public Task SaveAsync(ContentItem model)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -25,7 +25,14 @@ namespace Abi.OrchardCore.Data
 
         public Task<Encounter> GetAsync(int id)
         {
-            return _session.Query<Encounter, EncounterIndex>(e => e.Id == id).FirstOrDefaultAsync();
+            return _session.GetAsync<Encounter>(id);
+        }
+
+        public Task SaveAsync(Encounter model)
+        {
+            _session.Save(model);
+
+            return Task.CompletedTask;
         }
     }
 }

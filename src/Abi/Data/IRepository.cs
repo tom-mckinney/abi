@@ -8,6 +8,8 @@ namespace Abi.Data
         where TModel : TInterface
         where TKey : struct
     {
+        Task SaveAsync(TModel model);
+
         Task<IEnumerable<TModel>> GetAllAsync();
 
         Task<TModel> GetAsync(TKey id);
