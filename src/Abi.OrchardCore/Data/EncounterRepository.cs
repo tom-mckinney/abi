@@ -9,30 +9,10 @@ using YesSql;
 
 namespace Abi.OrchardCore.Data
 {
-    public class EncounterRepository : IEncounterRepository
+    public class EncounterRepository : SessionRepository<Encounter>
     {
-        private readonly ISession _session;
-
-        public EncounterRepository(ISession session)
+        public EncounterRepository(ISession session) : base(session)
         {
-            _session = session;
-        }
-
-        public Task<IEnumerable<Encounter>> GetAllAsync()
-        {
-            return _session.Query<Encounter>().ListAsync();
-        }
-
-        public Task<Encounter> GetAsync(int id)
-        {
-            return _session.GetAsync<Encounter>(id);
-        }
-
-        public Task SaveAsync(Encounter model)
-        {
-            _session.Save(model);
-
-            return Task.CompletedTask;
         }
     }
 }
