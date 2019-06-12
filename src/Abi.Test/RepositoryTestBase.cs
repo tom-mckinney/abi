@@ -7,7 +7,7 @@ using YesSql.Provider.Sqlite;
 
 namespace Abi.Test
 {
-    public abstract class TestBase : IDisposable
+    public abstract class RepositoryTestBase : IDisposable
     {
         protected virtual string TablePrefix => "tp";
 

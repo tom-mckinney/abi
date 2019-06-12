@@ -12,7 +12,7 @@ using YesSql.Sql;
 
 namespace Abi.Test.Data
 {
-    public class EncounterRepositoryTests : TestBase
+    public class EncounterRepositoryTests : RepositoryTestBase
     {
         [Fact]
         public async Task GetAsync_returns_Encounter_by_id()
