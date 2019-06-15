@@ -8,9 +8,11 @@ namespace Abi.OrchardCore.Data.Indexes
 {
     public class EncounterIndex : MapIndex
     {
-        public int SessionId { get; set; }
+        public string EncounterId { get; set; }
 
-        public string ContentVariantId { get; set; }
+        public string SessionId { get; set; }
+
+        public string VariantId { get; set; }
     }
 
     public class EncounterIndexProvider : IndexProvider<Encounter>
@@ -21,8 +23,9 @@ namespace Abi.OrchardCore.Data.Indexes
             {
                 return new EncounterIndex
                 {
+                    EncounterId = encounter.EncounterId,
                     SessionId = encounter.SessionId,
-                    ContentVariantId = encounter.ContentVariantId
+                    VariantId = encounter.VariantId
                 };
             });
         }

@@ -6,10 +6,10 @@ namespace Abi.Models
 {
     public class Encounter : AbiEntity
     {
-        public int SessionId { get; set; }
+        public string EncounterId { get; set; }
 
-        public virtual Session Session { get; set; }
+        public string SessionId { get; set; }
 
-        public string ContentVariantId { get; set; }
+        public string VariantId { get; set; }
     }
 }

@@ -13,17 +13,20 @@ namespace Abi
         protected readonly IVisitorRepository _visitorRepository;
         protected readonly ISessionRepository _sessionRepository;
         protected readonly IVariantRepository _variantRepository;
+        protected readonly IEncounterRepository _encounterRepository;
         protected readonly ICookieService _cookieService;
 
         public ExperimentManagerBase(
             IVisitorRepository visitorRepository,
             ISessionRepository sessionRepository,
             IVariantRepository variantRepository,
+            IEncounterRepository encounterRepository,
             ICookieService cookieService)
         {
             _visitorRepository = visitorRepository;
             _sessionRepository = sessionRepository;
             _variantRepository = variantRepository;
+            _encounterRepository = encounterRepository;
             _cookieService = cookieService;
         }
 
@@ -71,6 +74,11 @@ namespace Abi
             }
 
             return variant;
+        }
+
+        protected virtual Task<Encounter> CreateEncounterAsync(string sessionId, string variantId)
+        {
+            return _encounterRepository.CreateAsync(sessionId, variantId);
         }
     }
 }

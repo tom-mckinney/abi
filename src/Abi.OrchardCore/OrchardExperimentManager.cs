@@ -22,12 +22,14 @@ namespace Abi.OrchardCore
             IVisitorRepository visitorRepository,
             ISessionRepository sessionRepository,
             IVariantRepository variantRepository,
+            IEncounterRepository encounterRepository,
             ICookieService cookieService,
             ContentBalancer contentBalancer)
             : base(
                   visitorRepository,
                   sessionRepository,
                   variantRepository,
+                  encounterRepository,
                   cookieService)
         {
             //_visitorRepository = visitorRepository;
@@ -66,6 +68,8 @@ namespace Abi.OrchardCore
             }
 
             _cookieService.AddVariantCookie(zone, experimentId, variant.VariantId);
+
+            await CreateEncounterAsync(session.SessionId, variant.VariantId);
 
             content.Widgets.RemoveAll(c => c.ContentItemId != variant.ContentItemId);
 

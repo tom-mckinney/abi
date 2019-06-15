@@ -45,7 +45,7 @@ namespace Abi.OrchardCore
         {
             SchemaBuilder.CreateMapIndexTable(nameof(EncounterIndex), table => table
                 .Column<int>(nameof(EncounterIndex.SessionId))
-                .Column<string>(nameof(EncounterIndex.ContentVariantId)));
+                .Column<string>(nameof(EncounterIndex.VariantId)));
 
             return 3;
         }
@@ -65,6 +65,21 @@ namespace Abi.OrchardCore
                 .Column<string>(nameof(VisitorIndex.UserId)));
 
             return 4;
+        }
+
+        public int UpdateFrom4()
+        {
+            SchemaBuilder.AlterTable(nameof(EncounterIndex), table =>
+            {
+                table.DropColumn(nameof(EncounterIndex.SessionId));
+                table.AddColumn<string>(nameof(EncounterIndex.SessionId));
+                table.AlterColumn("ContentVariantId", column =>
+                {
+                    column.ColumnName = nameof(EncounterIndex.VariantId);
+                });
+            });
+
+            return 5;
         }
     }
 }
