@@ -29,7 +29,7 @@ namespace Abi.OrchardCore.Filters
                 // TODO
             }
 
-            if (!_httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(Constants.ExperimentHeader, out string experimentId))
+            if (!_httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(Constants.Cookies.Experiment, out string experimentId))
             {
                 return new ValueTask<FluidValue>(new StringValue("No experiment"));
             }

@@ -12,6 +12,7 @@ namespace Abi.Services
     public interface ICookieService
     {
         void AddExperimentCookie(string zone, string experimentId, string variantId);
+        void AddVisitorCookie(string visitorId);
         Task<bool> TryGetExperimentCookie(string zone, string experimentId, out string variantId);
         Task<bool> TryGetVisitorCookieAsync(out string visitorId);
         string BuildCookieName(params string[] parts);
@@ -29,23 +30,39 @@ namespace Abi.Services
             _userRepository = userRepository;
         }
 
+        private void AddCookie(string cookieName, string cookieValue)
+        {
+            _httpContext.Response.Cookies.Append(cookieName, cookieValue);
+        }
+
         public void AddExperimentCookie(string zone, string experimentId, string variantId)
         {
             string cookieName = BuildCookieName(zone, experimentId);
 
-            _httpContext.Response.Cookies.Append(cookieName, variantId);
+            AddCookie(cookieName, variantId);
+        }
+        public void AddVisitorCookie(string visitorId)
+        {
+            string cookieName = BuildCookieName(Constants.Cookies.Visitor);
+
+            AddCookie(cookieName, visitorId);
         }
 
         public string BuildCookieName(params string[] parts)
         {
-            return string.Join("_", "abi", parts);
+            return $"{Constants.Cookies.Prefix}_{string.Join("_", parts)}";
+        }
+
+        private bool TryGetCookie(string cookieName, out string cookieValue)
+        {
+            return _httpContext.Request.Cookies.TryGetValue(cookieName, out cookieValue);
         }
 
         public Task<bool> TryGetExperimentCookie(string zone, string experimentId, out string variantId)
         {
             string cookieName = BuildCookieName(zone, experimentId);
 
-            return Task.FromResult(_httpContext.Request.Cookies.TryGetValue(cookieName, out variantId));
+            return Task.FromResult(TryGetCookie(cookieName, out variantId));
         }
 
         public Task<bool> TryGetVisitorCookieAsync(out string visitorId)
@@ -53,13 +70,11 @@ namespace Abi.Services
             //if (_httpContext?.User?.Identity?.IsAuthenticated == true)
             //{
             //    User user = await _userRepository.GetByUserNameAsync(_httpContext.User.Identity.Name);
-
-
             //}
 
-            visitorId = null;
+            string cookieName = BuildCookieName(Constants.Cookies.Visitor);
 
-            throw new NotImplementedException();
+            return Task.FromResult(TryGetCookie(cookieName, out visitorId));
         }
     }
 }

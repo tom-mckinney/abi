@@ -1,4 +1,5 @@
-﻿using Abi.OrchardCore.Data;
+﻿using Abi.Data;
+using Abi.OrchardCore.Data;
 using Abi.OrchardCore.Drivers;
 using Abi.OrchardCore.Filters;
 using Abi.Services;
@@ -33,6 +34,7 @@ namespace Abi.OrchardCore
 
             // Repositories
             services.AddScoped<IExperimentRepository, ExperimentRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             // Liquid Filters
             services.AddLiquidFilter<AbiFilter>("abi");

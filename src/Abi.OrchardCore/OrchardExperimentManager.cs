@@ -1,4 +1,6 @@
-﻿using Abi.Services;
+﻿using Abi.Data;
+using Abi.Models;
+using Abi.Services;
 using OrchardCore.Flows.Models;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,11 +13,16 @@ namespace Abi.OrchardCore
 
     public class OrchardExperimentManager : IExperimentManager
     {
+        private readonly IVisitorRepository _visitorRepository;
         private readonly ICookieService _cookieService;
         private readonly ContentBalancer _contentBalancer;
 
-        public OrchardExperimentManager(ICookieService cookieService, ContentBalancer contentBalancer)
+        public OrchardExperimentManager(
+            IVisitorRepository visitorRepository,
+            ICookieService cookieService,
+            ContentBalancer contentBalancer)
         {
+            _visitorRepository = visitorRepository;
             _cookieService = cookieService;
             _contentBalancer = contentBalancer;
         }
@@ -25,7 +32,15 @@ namespace Abi.OrchardCore
             string zone = "Content";
             string experimentId = content.ContentItem.ContentItemId;
 
-            // _cookieService.TryGetVisitorCookie
+            if (!await _cookieService.TryGetVisitorCookieAsync(out string visitorId)
+                || await _visitorRepository.GetByPublicIdAsync(visitorId) == null)
+            {
+                Visitor visitor = await _visitorRepository.CreateAsync();
+                visitorId = visitor.PublicId;
+            }
+
+            _cookieService.AddVisitorCookie(visitorId);
+
             // _cookieService.TryGetSessionCookie
 
             if (!await _cookieService.TryGetExperimentCookie(zone, experimentId, out string variantContentId)
