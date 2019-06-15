@@ -21,29 +21,15 @@ namespace Abi.OrchardCore
 
         public int Create()
         {
-            _contentDefinitionManager.AlterTypeDefinition(Constants.Types.ContentVariant, type => type
-                .Listable()
-                .Draftable()
-                .Versionable()
-                .Securable()
-                .WithPart(nameof(TitlePart))
-                .WithPart(nameof(FlowPart))
-                .WithPart(nameof(HtmlBodyPart), part =>
-                {
-                    part.WithSetting("Editor", "Wysiwyg");
-                })
-            );
-
             _contentDefinitionManager.AlterTypeDefinition(Constants.Types.Experiment, type => type
                 .Stereotype("Widget")
                 .Draftable()
                 .Versionable()
                 .Securable()
                 .WithPart(nameof(TitlePart))
-                .WithPart(nameof(BagPart), part =>
+                .WithPart(nameof(FlowPart), part =>
                 {
                     part.WithDisplayName("Variants");
-                    part.WithSetting("ContainedContentTypes", new string[] { nameof(ContentVariant) });
                 })
             );
 
@@ -62,6 +48,23 @@ namespace Abi.OrchardCore
                 .Column<string>(nameof(EncounterIndex.ContentVariantId)));
 
             return 3;
+        }
+
+        public int UpdateFrom3()
+        {
+            SchemaBuilder.CreateMapIndexTable(nameof(SessionIndex), table => table
+                .Column<string>(nameof(SessionIndex.SessionId))
+                .Column<string>(nameof(SessionIndex.VisitorId)));
+
+            SchemaBuilder.CreateMapIndexTable(nameof(VariantIndex), table => table
+                .Column<string>(nameof(VariantIndex.VariantId))
+                .Column<string>(nameof(VariantIndex.ContentItemid)));
+
+            SchemaBuilder.CreateMapIndexTable(nameof(VisitorIndex), table => table
+                .Column<string>(nameof(VisitorIndex.VisitorId))
+                .Column<string>(nameof(VisitorIndex.UserId)));
+
+            return 4;
         }
     }
 }

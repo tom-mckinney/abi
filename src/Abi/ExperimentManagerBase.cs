@@ -12,15 +12,18 @@ namespace Abi
     {
         protected readonly IVisitorRepository _visitorRepository;
         protected readonly ISessionRepository _sessionRepository;
+        protected readonly IVariantRepository _variantRepository;
         protected readonly ICookieService _cookieService;
 
         public ExperimentManagerBase(
             IVisitorRepository visitorRepository,
             ISessionRepository sessionRepository,
+            IVariantRepository variantRepository,
             ICookieService cookieService)
         {
             _visitorRepository = visitorRepository;
             _sessionRepository = sessionRepository;
+            _variantRepository = variantRepository;
             _cookieService = cookieService;
         }
 
@@ -28,7 +31,7 @@ namespace Abi
         {
             Visitor visitor = null;
 
-            if (await _cookieService.TryGetVisitorCookieAsync(out string visitorId))
+            if (_cookieService.TryGetVisitorCookie(out string visitorId))
             {
                 visitor = await _visitorRepository.GetByPublicIdAsync(visitorId);
             }
@@ -41,11 +44,11 @@ namespace Abi
             return visitor;
         }
 
-        protected virtual async Task<Session> GetOrCreateSessionAsync(int visitorId)
+        protected virtual async Task<Session> GetOrCreateSessionAsync(string visitorId)
         {
             Session session = null;
 
-            if (await _cookieService.TryGetSessionCookie(out string sessionId))
+            if (_cookieService.TryGetSessionCookie(out string sessionId))
             {
                 session = await _sessionRepository.GetByPublicIdAsync(sessionId);
             }
@@ -56,6 +59,18 @@ namespace Abi
             }
 
             return session;
+        }
+
+        protected virtual async Task<Variant> GetVariantAsync(string zone, string experimentId)
+        {
+            Variant variant = null;
+
+            if (_cookieService.TryGetVariantCookie(zone, experimentId, out string variantId))
+            {
+                variant = await _variantRepository.GetByPublicIdAsync(variantId);
+            }
+
+            return variant;
         }
     }
 }

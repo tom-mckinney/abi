@@ -8,9 +8,9 @@ namespace Abi.OrchardCore.Data.Indexes
 {
     public class SessionIndex : MapIndex
     {
-        public string PublicId { get; set; }
+        public string SessionId { get; set; }
 
-        public int VisitorId { get; set; }
+        public string VisitorId { get; set; }
     }
 
     public class SessionIndexProvider : IndexProvider<Session>
@@ -19,7 +19,7 @@ namespace Abi.OrchardCore.Data.Indexes
         {
             context.For<SessionIndex>().Map(session => new SessionIndex
             {
-                PublicId = session.PublicId,
+                SessionId = session.SessionId,
                 VisitorId = session.VisitorId
             });
         }

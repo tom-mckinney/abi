@@ -6,7 +6,7 @@ namespace Abi.Models
 {
     public class Visitor : AbiEntity
     {
-        public string PublicId { get; set; }
+        public string VisitorId { get; set; }
 
         public string UserId { get; set; }
 

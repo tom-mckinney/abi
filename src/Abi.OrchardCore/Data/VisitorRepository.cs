@@ -19,7 +19,7 @@ namespace Abi.OrchardCore.Data
         {
             var visitor = new Visitor
             {
-                PublicId = Guid.NewGuid().ToString("n")
+                VisitorId = Guid.NewGuid().ToString("n")
             };
 
             _session.Save(visitor);
@@ -30,7 +30,7 @@ namespace Abi.OrchardCore.Data
 
         public Task<Visitor> GetByPublicIdAsync(string publicId)
         {
-            return _session.Query<Visitor, VisitorIndex>(v => v.PublicId == publicId).FirstOrDefaultAsync();
+            return _session.Query<Visitor, VisitorIndex>(v => v.VisitorId == publicId).FirstOrDefaultAsync();
         }
     }
 }

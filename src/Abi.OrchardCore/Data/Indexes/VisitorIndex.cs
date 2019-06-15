@@ -8,7 +8,7 @@ namespace Abi.OrchardCore.Data.Indexes
 {
     public class VisitorIndex : MapIndex
     {
-        public string PublicId { get; set; }
+        public string VisitorId { get; set; }
 
         public string UserId { get; set; }
     }
@@ -21,7 +21,7 @@ namespace Abi.OrchardCore.Data.Indexes
             {
                 return new VisitorIndex
                 {
-                    PublicId = visitor.PublicId,
+                    VisitorId = visitor.VisitorId,
                     UserId = visitor.UserId
                 };
             });

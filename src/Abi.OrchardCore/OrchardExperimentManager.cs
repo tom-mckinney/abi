@@ -21,9 +21,14 @@ namespace Abi.OrchardCore
         public OrchardExperimentManager(
             IVisitorRepository visitorRepository,
             ISessionRepository sessionRepository,
+            IVariantRepository variantRepository,
             ICookieService cookieService,
             ContentBalancer contentBalancer)
-            : base(visitorRepository, sessionRepository, cookieService)
+            : base(
+                  visitorRepository,
+                  sessionRepository,
+                  variantRepository,
+                  cookieService)
         {
             //_visitorRepository = visitorRepository;
             //_sessionRepository = sessionRepository;
@@ -33,36 +38,36 @@ namespace Abi.OrchardCore
 
         public async Task<FlowPart> GetOrSetVariantAsync(FlowPart content)
         {
-            string zone = "Content";
+            string zone = "content";
             string experimentId = content.ContentItem.ContentItemId;
 
-            //if (!await _cookieService.TryGetVisitorCookieAsync(out string visitorId) || await _visitorRepository.GetByPublicIdAsync(visitorId) == null)
-            //{
-            //    Visitor visitor = await _visitorRepository.CreateAsync();
-            //    visitorId = visitor.PublicId;
-            //}
             Visitor visitor = await GetOrCreateVisitorAsync();
-            _cookieService.AddVisitorCookie(visitor.PublicId);
+            _cookieService.AddVisitorCookie(visitor.VisitorId);
 
-            //if (!await _cookieService.TryGetSessionCookie(out string sessionId) || await _sessionRepository.GetByPublicIdAsync(sessionId) == null)
-            //{
-            //    Session session = await _sessionRepository.CreateAsync()
-            //}
+            Session session = await GetOrCreateSessionAsync(visitor.VisitorId);
+            _cookieService.AddSessionCookie(session.SessionId);
 
-            Session session = await GetOrCreateSessionAsync(visitor.Id);
-            _cookieService.AddSessionCookie(session.PublicId);
+            Variant variant = await GetVariantAsync(zone, experimentId);
 
-            // _cookieService.TryGetSessionCookie
-
-            if (!await _cookieService.TryGetExperimentCookie(zone, experimentId, out string variantContentId) || !content.Widgets.Any(c => c.ContentItemId == variantContentId))
+            if (variant == null || !content.Widgets.Any(c => c.ContentItemId == variant.ContentItemId))
             {
                 int variantIndex = _contentBalancer.GetRandomIndex(content.Widgets); // TODO: make this personalized/influenced by history
-                variantContentId = content.Widgets.ElementAt(variantIndex).ContentItemId;
+                string variantContentId = content.Widgets.ElementAt(variantIndex).ContentItemId;
+
+                if (variant == null)
+                {
+                    variant = await _variantRepository.CreateAsync(variantContentId);
+                }
+                else
+                {
+                    variant.ContentItemId = variantContentId;
+                    await _variantRepository.UpdateAsync(variant);
+                }
             }
 
-            _cookieService.AddExperimentCookie(zone, experimentId, variantContentId);
+            _cookieService.AddVariantCookie(zone, experimentId, variant.VariantId);
 
-            content.Widgets.RemoveAll(c => c.ContentItemId != variantContentId);
+            content.Widgets.RemoveAll(c => c.ContentItemId != variant.ContentItemId);
 
             return content;
         }

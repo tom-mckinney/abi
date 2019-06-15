@@ -9,6 +9,6 @@ namespace Abi.Data
     public interface ISessionRepository : IRepository<Session, int>
     {
         Task<Session> GetByPublicIdAsync(string publicId);
-        Task<Session> CreateAsync(int visitorId);
+        Task<Session> CreateAsync(string visitorId);
     }
 }

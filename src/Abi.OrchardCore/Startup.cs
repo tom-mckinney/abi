@@ -1,5 +1,6 @@
 ﻿using Abi.Data;
 using Abi.OrchardCore.Data;
+using Abi.OrchardCore.Data.Indexes;
 using Abi.OrchardCore.Drivers;
 using Abi.OrchardCore.Filters;
 using Abi.Services;
@@ -14,6 +15,7 @@ using OrchardCore.Modules;
 using OrchardCore.Navigation;
 using OrchardCore.Security.Permissions;
 using System;
+using YesSql.Indexes;
 
 namespace Abi.OrchardCore
 {
@@ -32,9 +34,15 @@ namespace Abi.OrchardCore
             services.AddScoped<IPermissionProvider, Permissions>();
             services.AddScoped<INavigationProvider, AdminMenu>();
 
+            // Index providers
+            services.AddSingleton<IIndexProvider, SessionIndexProvider>();
+            services.AddSingleton<IIndexProvider, VariantIndexProvider>();
+            services.AddSingleton<IIndexProvider, VisitorIndexProvider>();
+
             // Repositories
             services.AddScoped<IExperimentRepository, ExperimentRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
+            services.AddScoped<IVariantRepository, VariantRepository>();
             services.AddScoped<IVisitorRepository, VisitorRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 

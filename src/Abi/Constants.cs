@@ -10,8 +10,9 @@ namespace Abi
         {
             public const string Prefix = "abi";
             public const string Experiment = "experiment";
-            public const string Visitor = "visitor";
             public const string Session = "session";
+            public const string Variant = "variant";
+            public const string Visitor = "visitor";
         }
 
         public static class Types
