@@ -1,38 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Abi.Data;
-using OrchardCore.ContentManagement;
+using Abi.Models;
+using Abi.OrchardCore.Data.Indexes;
 using YesSql;
+
+using AbiSession = Abi.Models.Session;
 
 namespace Abi.OrchardCore.Data
 {
-    public abstract class SessionRepository<TModel> : IRepository<TModel, int>
-        where TModel : class, IEntity<int>
+    public class SessionRepository : YesSqlRepository<AbiSession>, ISessionRepository
     {
-        protected readonly ISession _session;
-
-        public SessionRepository(ISession session)
+        public SessionRepository(ISession session) : base(session)
         {
-            _session = session;
         }
 
-        public virtual Task<IEnumerable<TModel>> GetAllAsync()
+        public async Task<AbiSession> CreateAsync(int visitorId)
         {
-            return _session.Query<TModel>().ListAsync();
+            var session = new AbiSession
+            {
+                PublicId = Guid.NewGuid().ToString("n"),
+                VisitorId = visitorId
+            };
+
+            _session.Save(session);
+            await _session.CommitAsync();
+
+            return session;
         }
 
-        public virtual Task<TModel> GetAsync(int id)
+        public Task<AbiSession> GetByPublicIdAsync(string publicId)
         {
-            return _session.GetAsync<TModel>(id);
-        }
-
-        public virtual Task SaveAsync(TModel model)
-        {
-            _session.Save(model);
-
-            return Task.CompletedTask;
+            return _session.Query<AbiSession, SessionIndex>(s => s.PublicId == publicId).FirstOrDefaultAsync();
         }
     }
 }

@@ -9,15 +9,23 @@ using YesSql;
 
 namespace Abi.OrchardCore.Data
 {
-    public class VisitorRepository : SessionRepository<Visitor>, IVisitorRepository
+    public class VisitorRepository : YesSqlRepository<Visitor>, IVisitorRepository
     {
         public VisitorRepository(ISession session) : base(session)
         {
         }
 
-        public Task<Visitor> CreateAsync()
+        public async Task<Visitor> CreateAsync()
         {
-            throw new NotImplementedException();
+            var visitor = new Visitor
+            {
+                PublicId = Guid.NewGuid().ToString("n")
+            };
+
+            _session.Save(visitor);
+            await _session.CommitAsync();
+
+            return visitor;
         }
 
         public Task<Visitor> GetByPublicIdAsync(string publicId)

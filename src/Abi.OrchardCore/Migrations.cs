@@ -21,7 +21,7 @@ namespace Abi.OrchardCore
 
         public int Create()
         {
-            _contentDefinitionManager.AlterTypeDefinition(nameof(ContentVariant), type => type
+            _contentDefinitionManager.AlterTypeDefinition(Constants.Types.ContentVariant, type => type
                 .Listable()
                 .Draftable()
                 .Versionable()
@@ -34,7 +34,7 @@ namespace Abi.OrchardCore
                 })
             );
 
-            _contentDefinitionManager.AlterTypeDefinition(nameof(Experiment), type => type
+            _contentDefinitionManager.AlterTypeDefinition(Constants.Types.Experiment, type => type
                 .Stereotype("Widget")
                 .Draftable()
                 .Versionable()

@@ -9,7 +9,7 @@ using YesSql;
 
 namespace Abi.OrchardCore.Data
 {
-    public class EncounterRepository : SessionRepository<Encounter>
+    public class EncounterRepository : YesSqlRepository<Encounter>
     {
         public EncounterRepository(ISession session) : base(session)
         {

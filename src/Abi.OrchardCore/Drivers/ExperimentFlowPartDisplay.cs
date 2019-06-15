@@ -18,7 +18,7 @@ namespace Abi.OrchardCore.Drivers
 
         public override async Task<IDisplayResult> DisplayAsync(FlowPart part, BuildPartDisplayContext context)
         {
-            if (context?.TypePartDefinition?.ContentTypeDefinition?.Name == nameof(Experiment) && context?.DisplayType == "Detail")
+            if (context?.TypePartDefinition?.ContentTypeDefinition?.Name == Constants.Types.Experiment && context?.DisplayType == "Detail")
             {
                 part = await _experimentManager.GetOrSetVariantAsync(part);
             }

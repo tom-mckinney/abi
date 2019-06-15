@@ -13,5 +13,11 @@ namespace Abi
             public const string Visitor = "visitor";
             public const string Session = "session";
         }
+
+        public static class Types
+        {
+            public const string Experiment = "Experiment";
+            public const string ContentVariant = "ContentVariant";
+        }
     }
 }

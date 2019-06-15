@@ -23,7 +23,7 @@ namespace Abi.OrchardCore.Data
 
         public Task<IEnumerable<ContentItem>> GetAllAsync()
         {
-            return _helper.GetRecentContentItemsByContentTypeAsync(nameof(Experiment));
+            return _helper.GetRecentContentItemsByContentTypeAsync(Constants.Types.Experiment);
         }
 
         public Task<ContentItem> GetAsync(int id)

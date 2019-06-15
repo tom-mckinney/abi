@@ -12,8 +12,10 @@ namespace Abi.Services
     public interface ICookieService
     {
         void AddExperimentCookie(string zone, string experimentId, string variantId);
-        void AddVisitorCookie(string visitorId);
+        void AddSessionCookie(string sessionPublicId);
+        void AddVisitorCookie(string visitorPublicId);
         Task<bool> TryGetExperimentCookie(string zone, string experimentId, out string variantId);
+        Task<bool> TryGetSessionCookie(out string sessionId);
         Task<bool> TryGetVisitorCookieAsync(out string visitorId);
         string BuildCookieName(params string[] parts);
     }
@@ -41,11 +43,19 @@ namespace Abi.Services
 
             AddCookie(cookieName, variantId);
         }
-        public void AddVisitorCookie(string visitorId)
+
+        public void AddSessionCookie(string sessionPublicId)
+        {
+            string cookieName = BuildCookieName(Constants.Cookies.Session);
+
+            AddCookie(cookieName, sessionPublicId);
+        }
+
+        public void AddVisitorCookie(string visitorPublicId)
         {
             string cookieName = BuildCookieName(Constants.Cookies.Visitor);
 
-            AddCookie(cookieName, visitorId);
+            AddCookie(cookieName, visitorPublicId);
         }
 
         public string BuildCookieName(params string[] parts)
@@ -63,6 +73,13 @@ namespace Abi.Services
             string cookieName = BuildCookieName(zone, experimentId);
 
             return Task.FromResult(TryGetCookie(cookieName, out variantId));
+        }
+
+        public Task<bool> TryGetSessionCookie(out string sessionId)
+        {
+            string cookieName = BuildCookieName(Constants.Cookies.Session);
+
+            return Task.FromResult(TryGetCookie(cookieName, out sessionId));
         }
 
         public Task<bool> TryGetVisitorCookieAsync(out string visitorId)
