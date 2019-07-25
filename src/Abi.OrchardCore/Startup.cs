@@ -45,6 +45,7 @@ namespace Abi.OrchardCore
             services.AddScoped<IVariantRepository, VariantRepository>();
             services.AddScoped<IVisitorRepository, VisitorRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IEncounterRepository, EncounterRepository>();
 
             // Liquid Filters
             services.AddLiquidFilter<AbiFilter>("abi");

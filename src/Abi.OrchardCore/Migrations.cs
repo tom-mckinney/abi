@@ -72,14 +72,22 @@ namespace Abi.OrchardCore
             SchemaBuilder.AlterTable(nameof(EncounterIndex), table =>
             {
                 table.DropColumn(nameof(EncounterIndex.SessionId));
-                table.AddColumn<string>(nameof(EncounterIndex.SessionId));
-                table.AlterColumn("ContentVariantId", column =>
-                {
-                    column.ColumnName = nameof(EncounterIndex.VariantId);
-                });
+                table.DropColumn("ContentVariantId");
             });
 
             return 5;
+        }
+
+        public int UpdateFrom5()
+        {
+            SchemaBuilder.AlterTable(nameof(EncounterIndex), table =>
+            {
+                table.AddColumn<string>(nameof(EncounterIndex.EncounterId));
+                //table.AddColumn<string>(nameof(EncounterIndex.SessionId));
+                //table.AddColumn<string>(nameof(EncounterIndex.VariantId));
+            });
+
+            return 6;
         }
     }
 }

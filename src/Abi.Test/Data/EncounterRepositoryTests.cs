@@ -1,6 +1,9 @@
 ﻿using Abi.Models;
+using Abi.OrchardCore;
 using Abi.OrchardCore.Data;
 using Abi.OrchardCore.Data.Indexes;
+using Moq;
+using OrchardCore.ContentManagement.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,8 +41,8 @@ namespace Abi.Test.Data
         {
             IStore store = await CreateStore();
 
-            var encounter1 = new Encounter { SessionId = 20, ContentVariantId = "123" };
-            var encounter2 = new Encounter { SessionId = 30, ContentVariantId = "321" };
+            var encounter1 = new Encounter { SessionId = "20", VariantId = "123" };
+            var encounter2 = new Encounter { SessionId = "30", VariantId = "321" };
 
             using (var session = store.CreateSession())
             {
@@ -81,16 +84,57 @@ namespace Abi.Test.Data
             {
                 connection.Open();
 
-                using (var transaction = connection.BeginTransaction(store.Configuration.IsolationLevel))
+                void RunMigration(Action<Migrations> action)
                 {
-                    var builder = new SchemaBuilder(store.Configuration, transaction);
+                    using (var transaction = connection.BeginTransaction(store.Configuration.IsolationLevel))
+                    {
+                        var builder = new SchemaBuilder(store.Configuration, transaction);
 
-                    builder.CreateMapIndexTable(nameof(EncounterIndex), table => table
-                        .Column<int>(nameof(EncounterIndex.SessionId))
-                        .Column<string>(nameof(EncounterIndex.ContentVariantId)));
+                        var migrations = new Migrations(new Mock<IContentDefinitionManager>().Object)
+                        {
+                            SchemaBuilder = builder
+                        };
 
-                    transaction.Commit();
+                        action(migrations);
+
+                        transaction.Commit();
+                    }
                 }
+
+                RunMigration(m => m.Create());
+                RunMigration(m => m.UpdateFrom1());
+                RunMigration(m => m.UpdateFrom2());
+                RunMigration(m => m.UpdateFrom3());
+                RunMigration(m => m.UpdateFrom4());
+                RunMigration(m => m.UpdateFrom5());
+
+                //using (var transaction = connection.BeginTransaction(store.Configuration.IsolationLevel))
+                //{
+                //    var builder = new SchemaBuilder(store.Configuration, transaction);
+
+                //    var migrations = new Migrations(new Mock<IContentDefinitionManager>().Object)
+                //    {
+                //        SchemaBuilder = builder
+                //    };
+
+                //    migrations.Create();
+                //    transaction.Commit();
+                //    migrations.UpdateFrom1();
+                //    transaction.Commit();
+                //    migrations.UpdateFrom2();
+                //    transaction.Commit();
+                //    migrations.UpdateFrom3();
+                //    transaction.Commit();
+                //    migrations.UpdateFrom4();
+                //    transaction.Commit();
+                //    migrations.UpdateFrom5();
+                //    transaction.Commit();
+
+                //    //builder.CreateMapIndexTable(nameof(EncounterIndex), table => table
+                //    //    .Column<int>(nameof(EncounterIndex.SessionId))
+                //    //    .Column<string>(nameof(EncounterIndex.VariantId)));
+
+                //}
             }
 
             return Task.CompletedTask;
