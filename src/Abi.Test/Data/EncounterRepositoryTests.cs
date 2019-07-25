@@ -84,60 +84,37 @@ namespace Abi.Test.Data
             {
                 connection.Open();
 
-                void RunMigration(Action<Migrations> action)
-                {
-                    using (var transaction = connection.BeginTransaction(store.Configuration.IsolationLevel))
-                    {
-                        var builder = new SchemaBuilder(store.Configuration, transaction);
-
-                        var migrations = new Migrations(new Mock<IContentDefinitionManager>().Object)
-                        {
-                            SchemaBuilder = builder
-                        };
-
-                        action(migrations);
-
-                        transaction.Commit();
-                    }
-                }
-
-                RunMigration(m => m.Create());
-                RunMigration(m => m.UpdateFrom1());
-                RunMigration(m => m.UpdateFrom2());
-                RunMigration(m => m.UpdateFrom3());
-                RunMigration(m => m.UpdateFrom4());
-                RunMigration(m => m.UpdateFrom5());
-
-                //using (var transaction = connection.BeginTransaction(store.Configuration.IsolationLevel))
-                //{
-                //    var builder = new SchemaBuilder(store.Configuration, transaction);
-
-                //    var migrations = new Migrations(new Mock<IContentDefinitionManager>().Object)
-                //    {
-                //        SchemaBuilder = builder
-                //    };
-
-                //    migrations.Create();
-                //    transaction.Commit();
-                //    migrations.UpdateFrom1();
-                //    transaction.Commit();
-                //    migrations.UpdateFrom2();
-                //    transaction.Commit();
-                //    migrations.UpdateFrom3();
-                //    transaction.Commit();
-                //    migrations.UpdateFrom4();
-                //    transaction.Commit();
-                //    migrations.UpdateFrom5();
-                //    transaction.Commit();
-
-                //    //builder.CreateMapIndexTable(nameof(EncounterIndex), table => table
-                //    //    .Column<int>(nameof(EncounterIndex.SessionId))
-                //    //    .Column<string>(nameof(EncounterIndex.VariantId)));
-
-                //}
+                RunMigration(store, m => m.Create());
+                RunMigration(store, m => m.UpdateFrom1());
+                RunMigration(store, m => m.UpdateFrom2());
+                RunMigration(store, m => m.UpdateFrom3());
+                RunMigration(store, m => m.UpdateFrom4());
+                RunMigration(store, m => m.UpdateFrom5());
             }
 
             return Task.CompletedTask;
+        }
+
+        void RunMigration(IStore store, Action<Migrations> action)
+        {
+            using (var connection = store.Configuration.ConnectionFactory.CreateConnection())
+            {
+                connection.Open();
+
+                using (var transaction = connection.BeginTransaction(store.Configuration.IsolationLevel))
+                {
+                    var builder = new SchemaBuilder(store.Configuration, transaction);
+
+                    var migrations = new Migrations(new Mock<IContentDefinitionManager>().Object)
+                    {
+                        SchemaBuilder = builder
+                    };
+
+                    action(migrations);
+
+                    transaction.Commit();
+                }
+            }
         }
     }
 }
