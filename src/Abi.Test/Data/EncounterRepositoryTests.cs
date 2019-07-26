@@ -3,6 +3,7 @@ using Abi.OrchardCore;
 using Abi.OrchardCore.Data;
 using Abi.OrchardCore.Data.Indexes;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using Moq;
 using OrchardCore.ContentManagement.Metadata;
 using System;
@@ -21,25 +22,70 @@ namespace Abi.Test.Data
         [Fact]
         public async Task GetAsync_returns_Encounter_by_id()
         {
-            //IStore store = await CreateStore();
-            using (var store = await CreateStore())
+            var encounter1 = new Encounter { SessionId = "20", VariantId = "123" };
+            var encounter2 = new Encounter { SessionId = "30", VariantId = "321" };
+
+            using (IStore store = await CreateStore())
+            {
+                int id;
+
+                var dbAccessor = CreateDbConnectionAccessor(store);
+
+                using (var connection = dbAccessor.CreateConnection())
+                {
+                    connection.Open();
+
+                    await connection.InsertAsync(encounter1);
+                    id = await connection.InsertAsync(encounter2);
+                }
+
+                var repository = new EncounterRepository(dbAccessor, DefaultShellSettings);
+
+                var actualEncounter = await repository.GetAsync(id);
+
+                CustomAssert.AllPropertiesMapped(encounter2, actualEncounter);
+            }
+        }
+
+            [Fact]
+        public async Task GetAsync_returns_null_if_id_does_not_exist()
+        {
+            using (IStore store = await CreateStore())
             {
                 var dbAccessor = CreateDbConnectionAccessor(store);
 
-                var encounter = TestData.Create<Encounter>(); //new Encounter { SessionId = 20, ContentVariantId = "123" };
+                var repository = new EncounterRepository(dbAccessor, DefaultShellSettings);
 
-                using (var session = store.CreateSession())
-                {
-                    session.Save(encounter);
+                var actualEncounter = await repository.GetAsync(1);
 
-                    var repository = new EncounterRepository(dbAccessor, DefaultShellSettings);
-
-                    var newEncounter = await repository.GetAsync(encounter.Id);
-
-                    Assert.Same(encounter, newEncounter);
+                Assert.Null(actualEncounter);
             }
+        }
 
+        [Fact]
+        public async Task GetByPublicIdAsync_returns_Encounter_by_EncounterId()
+        {
+            string targetEncounterId = Guid.NewGuid().ToString("n");
+            var encounter1 = new Encounter { EncounterId = targetEncounterId, SessionId = "20", VariantId = "123" };
+            var encounter2 = new Encounter { EncounterId = Guid.NewGuid().ToString("n"), SessionId = "30", VariantId = "321" };
 
+            using (IStore store = await CreateStore())
+            {
+                var dbAccessor = CreateDbConnectionAccessor(store);
+
+                using (var connection = dbAccessor.CreateConnection())
+                {
+                    connection.Open();
+
+                    await connection.InsertAsync(encounter1);
+                    await connection.InsertAsync(encounter2);
+                }
+
+                var repository = new EncounterRepository(dbAccessor, DefaultShellSettings);
+
+                var actualEncounter = await repository.GetByPublicIdAsync(targetEncounterId);
+
+                CustomAssert.AllPropertiesMapped(encounter1, actualEncounter);
             }
         }
 
@@ -48,23 +94,26 @@ namespace Abi.Test.Data
         {
             var encounter1 = new Encounter { SessionId = "20", VariantId = "123" };
             var encounter2 = new Encounter { SessionId = "30", VariantId = "321" };
-            
+
             using (IStore store = await CreateStore())
-            using (var session = store.CreateSession())
             {
                 var dbAccessor = CreateDbConnectionAccessor(store);
 
-                session.Save(encounter1);
-                session.Save(encounter2);
+                using (var connection = dbAccessor.CreateConnection())
+                {
+                    connection.Open();
 
-                //var repository = new EncounterRepository(session);
+                    await connection.InsertAsync(encounter1);
+                    await connection.InsertAsync(encounter2);
+                }
+
                 var repository = new EncounterRepository(dbAccessor, DefaultShellSettings);
 
-                var newEncounter = await repository.GetAllAsync();
+                var allEncounters = await repository.GetAllAsync();
 
-                Assert.Equal(2, newEncounter.Count());
-                Assert.Same(encounter1, newEncounter.First(e => e.Id == encounter1.Id));
-                Assert.Same(encounter2, newEncounter.First(e => e.Id == encounter2.Id));
+                Assert.Equal(2, allEncounters.Count());
+                CustomAssert.AllPropertiesMapped(encounter1, allEncounters.First(e => e.Id == encounter1.Id));
+                CustomAssert.AllPropertiesMapped(encounter2, allEncounters.First(e => e.Id == encounter2.Id));
             }
         }
 

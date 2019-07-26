@@ -9,7 +9,7 @@ namespace Abi.Data
 {
     public interface IEncounterRepository : IRepositoryBase<Encounter, int>
     {
-        Task<Encounter> GetByPublicIdAsync(string publicId);
+        Task<Encounter> GetByPublicIdAsync(string encounterId);
 
         Task<Encounter> CreateAsync(string sessionId, string variantId);
     }

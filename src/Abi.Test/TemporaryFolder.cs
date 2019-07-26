@@ -7,9 +7,9 @@ namespace Abi.Test
     {
         private readonly bool _deleteOnDispose;
 
-        public TemporaryFolder(bool deleteOnDispose = true)
+        public TemporaryFolder(bool deleteOnDispose = true, string prefix = "abi")
         {
-            Folder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()) + Path.DirectorySeparatorChar;
+            Folder = Path.Combine(Path.GetTempPath(), $"{prefix}-{Path.GetRandomFileName()}") + Path.DirectorySeparatorChar;
 
             Directory.CreateDirectory(Folder);
 

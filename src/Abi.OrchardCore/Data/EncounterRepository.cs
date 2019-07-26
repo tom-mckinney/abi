@@ -1,14 +1,11 @@
 ﻿using Abi.Data;
 using Abi.Models;
-using Abi.OrchardCore.Data.Indexes;
 using Dapper;
-using Dapper.Contrib;
 using Dapper.Contrib.Extensions;
 using OrchardCore.Data;
 using OrchardCore.Environment.Shell;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using YesSql;
 
@@ -42,15 +39,8 @@ namespace Abi.OrchardCore.Data
                 using (var transaction = connection.BeginTransaction())
                 {
                     encounter.Id = await connection.InsertAsync(encounter, transaction);
-
-                    //var dialect = SqlDialectFactory.For(connection);
-                    //var encountersTable = dialect.QuoteForTableName($"{_tablePrefix}{Constants.CustomTables.Encounters}");
-
-                    //var insertCommand = $"INSERT INTO {encountersTable} ({dialect.QuoteForColumnName("EncounterId")}, {dialect.QuoteForColumnName("SessionId")}, {dialect.QuoteForColumnName("VariantId")}, {dialect.QuoteForColumnName("CreatedUtc")}) VALUES (@EncounterId, @SessionId, @VariantId, @CreatedUtc)";
-
-                    //await connection.ExecuteAsync(insertCommand, encounter);
                 
-                    transaction.Commit(); // If an exception occurs the transaction is disposed and rollbacked
+                    transaction.Commit();
                 }
             }
 
@@ -59,30 +49,37 @@ namespace Abi.OrchardCore.Data
 
         public Task<IEnumerable<Encounter>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            using (var connection = _dbAccessor.CreateConnection())
+            {
+                connection.Open();
+
+                return connection.GetAllAsync<Encounter>();
+            }
         }
 
         public Task<Encounter> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = _dbAccessor.CreateConnection())
+            {
+                connection.Open();
+
+                return connection.GetAsync<Encounter>(id);
+            }
         }
 
-        public Task<Encounter> GetByPublicIdAsync(string publicId)
+        public Task<Encounter> GetByPublicIdAsync(string encounterId)
         {
-            throw new NotImplementedException();
-            //using (var connection = _dbAccessor.CreateConnection())
-            //using (var transaction = connection.BeginTransaction())
-            //{
-            //    var dialect = SqlDialectFactory.For(connection);
-            //    var customTable = dialect.QuoteForTableName($"{_tablePrefix}CustomTable");
+            using (var connection = _dbAccessor.CreateConnection())
+            {
+                connection.Open();
 
-            //    var selectCommand = $"SELECT * FROM {customTable}";
+                var dialect = SqlDialectFactory.For(connection);
+                var customTable = dialect.QuoteForTableName(_tablePrefix + Constants.CustomTables.Encounters);
 
-            //    connection.QueryFirstOrDefaultAsync<Encounter>(selectCommand, new {  })
-            //    var model = connection.QueryAsync<CustomTable>(selectCommand);
+                var selectCommand = $"SELECT * FROM {customTable} WHERE {dialect.QuoteForColumnName(nameof(Encounter.EncounterId))} = @EncounterId";
 
-            //    transaction.Commit(); // If an exception occurs the transaction is disposed and rollbacked
-            //}
+                return connection.QueryFirstOrDefaultAsync<Encounter>(selectCommand, new { EncounterId = encounterId });
+            }
         }
     }
 }
