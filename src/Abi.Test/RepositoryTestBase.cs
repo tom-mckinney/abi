@@ -5,6 +5,7 @@ using Moq;
 using OrchardCore.ContentManagement.Metadata;
 using OrchardCore.Data;
 using OrchardCore.Environment.Shell;
+using OrchardCore.Recipes.Services;
 using System;
 using System.Threading.Tasks;
 using YesSql;
@@ -53,15 +54,8 @@ namespace Abi.Test
             store.RegisterIndexes<VisitorIndexProvider>();
             store.RegisterIndexes<SessionIndexProvider>();
             store.RegisterIndexes<VariantIndexProvider>();
-            store.RegisterIndexes<EncounterIndexProvider>();
 
-            RunMigration(store, m => m.Create());
-            RunMigration(store, m => m.UpdateFrom1());
-            RunMigration(store, m => m.UpdateFrom2());
-            RunMigration(store, m => m.UpdateFrom3());
-            RunMigration(store, m => m.UpdateFrom4());
-            RunMigration(store, m => m.UpdateFrom5());
-            RunMigration(store, m => m.UpdateFrom6());
+            RunMigration(store, async m => await m.CreateAsync());
 
             return Task.CompletedTask;
         }        
@@ -76,7 +70,7 @@ namespace Abi.Test
                 {
                     var builder = new SchemaBuilder(store.Configuration, transaction);
 
-                    var migrations = new Migrations(new Mock<IContentDefinitionManager>().Object)
+                    var migrations = new Migrations(new Mock<IContentDefinitionManager>().Object, new Mock<IRecipeMigrator>().Object)
                     {
                         SchemaBuilder = builder
                     };

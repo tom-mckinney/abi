@@ -1,0 +1,267 @@
+{
+  "name": "",
+  "displayName": "",
+  "description": "",
+  "author": "",
+  "website": "",
+  "version": "",
+  "issetuprecipe": false,
+  "categories": "",
+  "variables": {
+    "recipesContentItemId": "[js:uuid()]"
+  },
+  "tags": [],
+  "steps": [
+    {
+      "name": "ContentDefinition",
+      "ContentTypes": [
+        {
+          "Name": "ExperimentCollection",
+          "DisplayName": "Experiment Collection",
+          "Settings": {
+            "Creatable": "True",
+            "Draftable": "True",
+            "Versionable": "True",
+            "Listable": "True",
+            "Securable": "True",
+            "Stereotype": null
+          },
+          "ContentTypePartDefinitionRecords": [
+            {
+              "PartName": "ExperimentCollection",
+              "Name": "ExperimentCollection",
+              "Settings": {
+                "Position": "1"
+              }
+            },
+            {
+              "PartName": "CommonPart",
+              "Name": "CommonPart",
+              "Settings": {
+                "Position": "2"
+              }
+            },
+            {
+              "PartName": "ListPart",
+              "Name": "ListPart",
+              "Settings": {
+                "DisplayName": null,
+                "Description": null,
+                "Editor": null,
+                "PageSize": "25",
+                "ContainedContentTypes": [
+                  "Experiment"
+                ],
+                "ContentIndexSettings": {},
+                "Position": "3"
+              }
+            },
+            {
+              "PartName": "TitlePart",
+              "Name": "TitlePart",
+              "Settings": {
+                "Position": "0"
+              }
+            }
+          ]
+        },
+        {
+          "Name": "ExperimentWidget",
+          "DisplayName": "Experiment Widget",
+          "Settings": {
+            "Creatable": "True",
+            "Draftable": "True",
+            "Versionable": "True",
+            "Listable": "True",
+            "Securable": "True",
+            "Stereotype": "Widget"
+          },
+          "ContentTypePartDefinitionRecords": [
+            {
+              "PartName": "ExperimentWidget",
+              "Name": "ExperimentWidget",
+              "Settings": {
+                "Position": "0"
+              }
+            }
+          ]
+        }
+      ],
+      "ContentParts": [
+        {
+          "Name": "CommonPart",
+          "Settings": {
+            "Attachable": "True",
+            "Description": "Provides an editor for the common properties of a content item."
+          },
+          "ContentPartFieldDefinitionRecords": []
+        },
+        {
+          "Name": "ListPart",
+          "Settings": {
+            "Attachable": "True",
+            "Description": "Add a list behavior."
+          },
+          "ContentPartFieldDefinitionRecords": []
+        },
+        {
+          "Name": "TitlePart",
+          "Settings": {
+            "Attachable": "True",
+            "Description": "Provides a Title for your content item.",
+            "DefaultPosition": "0"
+          },
+          "ContentPartFieldDefinitionRecords": []
+        },
+        {
+          "Name": "ExperimentWidget",
+          "Settings": {},
+          "ContentPartFieldDefinitionRecords": [
+            {
+              "FieldName": "ContentPickerField",
+              "Name": "ExperimentLink",
+              "Settings": {
+                "DisplayName": "ExperimentLink",
+                "Position": "0",
+                "Editor": null,
+                "DisplayMode": null,
+                "Hint": null,
+                "Required": false,
+                "Multiple": false,
+                "DisplayedContentTypes": [
+                  "Experiment"
+                ],
+                "ContentIndexSettings": {
+                  "Included": false,
+                  "Stored": false,
+                  "Analyzed": false,
+                  "Sanitized": false,
+                  "Tokenized": false,
+                  "Template": null
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "content",
+      "data": [
+        {
+          "ContentItemId": "[js: variables('recipesContentItemId')]",
+          "ContentType": "ExperimentCollection",
+          "DisplayText": "Experiments",
+          "Latest": true,
+          "Published": true,
+          "ModifiedUtc": "2019-06-05T22:17:39.2929765Z",
+          "PublishedUtc": "2019-06-05T22:17:39.3578846Z",
+          "CreatedUtc": "2019-06-05T22:17:39.3578846Z",
+          "Owner": "admin",
+          "Author": "admin",
+          "ExperimentCollection": {},
+          "CommonPart": {},
+          "ListPart": {
+            "FeedProxyUrl": null,
+            "FeedItemsCount": 20
+          },
+          "TitlePart": {
+            "Title": "Experiments"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AdminMenu",
+      "data": [
+        {
+          "Id": "be22b2d96b9a4fe38441bec4699bf375",
+          "Name": "Admin menu from Abi recipe",
+          "Enabled": true,
+          "MenuItems": [
+            {
+              "$type": "OrchardCore.AdminMenu.AdminNodes.LinkAdminNode, OrchardCore.AdminMenu",
+              "LinkText": "Experiments",
+              "LinkUrl": "[js: 'Admin/Contents/ContentItems/' +  variables('recipesContentItemId') + '/Display']",
+              "IconClass": "fas fa-flask",
+              "UniqueId": "b6aa7ed9f6474df9b38068ad380cbd0a",
+              "Enabled": true,
+              "Text": null,
+              "Id": null,
+              "Href": null,
+              "Url": null,
+              "Position": null,
+              "Priority": 0,
+              "LinkToFirstChild": true,
+              "LocalNav": false,
+              "Culture": null,
+              "Resource": null,
+              "Items": [],
+              "RouteValues": null,
+              "Permissions": [],
+              "Classes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "deployment",
+      "Plans": [
+        {
+          "Name": "Abi Deployment",
+          "Steps": [
+            {
+              "Type": "ContentDefinitionDeploymentStep",
+              "Step": {
+                "IncludeAll": false,
+                "ContentTypes": [
+                  "ExperimentCollection",
+                  "ExperimentWidget"
+                ],
+                "ContentParts": [
+                  "ExperimentCollection",
+                  "ExperimentWidget",
+                  "CommonPart",
+                  "ListPart",
+                  "TitlePart"
+                ],
+                "Id": "917a8701a6cc4fed836b4fb8d073bb40",
+                "Name": "ContentDefinition"
+              }
+            },
+            {
+              "Type": "ContentDeploymentStep",
+              "Step": {
+                "ContentTypes": [
+                  "ExperimentCollection",
+                  "ExperimentWidget"
+                ],
+                "Id": "6b78f6672e0b4a35b886f9267d87e5a8",
+                "Name": "ContentDeploymentStep"
+              }
+            },
+            {
+              "Type": "AdminMenuDeploymentStep",
+              "Step": {
+                "Id": "9ad5f9a2e36b4044a650cefb30ae25d5",
+                "Name": "AdminMenu"
+              }
+            },
+            {
+              "Type": "DeploymentPlanDeploymentStep",
+              "Step": {
+                "IncludeAll": false,
+                "DeploymentPlanNames": [
+                  "Abi Deployment"
+                ],
+                "Id": "90554c4f3ef549669625ee96d4d7af38",
+                "Name": "DeploymentPlan"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

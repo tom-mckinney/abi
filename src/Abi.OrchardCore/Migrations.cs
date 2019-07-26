@@ -6,21 +6,25 @@ using OrchardCore.ContentManagement.Metadata.Settings;
 using OrchardCore.Data.Migration;
 using OrchardCore.Flows.Models;
 using OrchardCore.Html.Model;
+using OrchardCore.Recipes.Services;
 using OrchardCore.Title.Model;
 using System;
+using System.Threading.Tasks;
 
 namespace Abi.OrchardCore
 {
     public class Migrations : DataMigration
     {
         IContentDefinitionManager _contentDefinitionManager;
+        private readonly IRecipeMigrator _recipeMigrator;
 
-        public Migrations(IContentDefinitionManager contentDefinitionManager)
+        public Migrations(IContentDefinitionManager contentDefinitionManager, IRecipeMigrator recipeMigrator)
         {
             _contentDefinitionManager = contentDefinitionManager;
+            _recipeMigrator = recipeMigrator;
         }
 
-        public int Create()
+        public async Task<int> CreateAsync()
         {
             _contentDefinitionManager.AlterTypeDefinition(Constants.Types.Experiment, type => type
                 .Stereotype("Widget")
@@ -34,25 +38,10 @@ namespace Abi.OrchardCore
                 })
             );
 
-            return 1;
-        }
+            SchemaBuilder.CreateMapIndexTable(nameof(VisitorIndex), table => table
+                .Column<string>(nameof(VisitorIndex.VisitorId))
+                .Column<int?>(nameof(VisitorIndex.UserId), col => col.Nullable()));
 
-        public int UpdateFrom1()
-        {
-            return 2;
-        }
-
-        public int UpdateFrom2()
-        {
-            SchemaBuilder.CreateMapIndexTable(nameof(EncounterIndex), table => table
-                .Column<int>(nameof(EncounterIndex.SessionId))
-                .Column<string>(nameof(EncounterIndex.VariantId)));
-
-            return 3;
-        }
-
-        public int UpdateFrom3()
-        {
             SchemaBuilder.CreateMapIndexTable(nameof(SessionIndex), table => table
                 .Column<string>(nameof(SessionIndex.SessionId))
                 .Column<string>(nameof(SessionIndex.VisitorId)));
@@ -61,38 +50,6 @@ namespace Abi.OrchardCore
                 .Column<string>(nameof(VariantIndex.VariantId))
                 .Column<string>(nameof(VariantIndex.ContentItemid)));
 
-            SchemaBuilder.CreateMapIndexTable(nameof(VisitorIndex), table => table
-                .Column<string>(nameof(VisitorIndex.VisitorId))
-                .Column<int?>(nameof(VisitorIndex.UserId), col => col.Nullable()));
-
-            return 4;
-        }
-
-        public int UpdateFrom4()
-        {
-            SchemaBuilder.AlterTable(nameof(EncounterIndex), table =>
-            {
-                table.DropColumn(nameof(EncounterIndex.SessionId));
-                table.DropColumn("ContentVariantId");
-            });
-
-            return 5;
-        }
-
-        public int UpdateFrom5()
-        {
-            SchemaBuilder.AlterTable(nameof(EncounterIndex), table =>
-            {
-                table.AddColumn<string>(nameof(EncounterIndex.EncounterId));
-                //table.AddColumn<string>(nameof(EncounterIndex.SessionId));
-                //table.AddColumn<string>(nameof(EncounterIndex.VariantId));
-            });
-
-            return 6;
-        }
-
-        public int UpdateFrom6()
-        {
             SchemaBuilder.CreateTable(Constants.CustomTables.Encounters, table => table
                 .Column<int>(nameof(Encounter.Id), col => col.PrimaryKey().Identity())
                 .Column<string>(nameof(Encounter.EncounterId), col => col.Unique())
@@ -102,7 +59,9 @@ namespace Abi.OrchardCore
                 .Column<DateTime?>(nameof(Encounter.ModifiedUtc), col => col.Nullable())
             );
 
-            return 7;
+            await _recipeMigrator.ExecuteAsync("abi.recipe.json", this);
+
+            return 1;
         }
     }
 }

@@ -38,7 +38,6 @@ namespace Abi.OrchardCore
             services.AddSingleton<IIndexProvider, VisitorIndexProvider>();
             services.AddSingleton<IIndexProvider, SessionIndexProvider>();
             services.AddSingleton<IIndexProvider, VariantIndexProvider>();
-            services.AddSingleton<IIndexProvider, EncounterIndexProvider>();
 
             // Repositories
             services.AddScoped<IExperimentRepository, ExperimentRepository>();

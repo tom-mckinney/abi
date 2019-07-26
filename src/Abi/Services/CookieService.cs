@@ -36,14 +36,25 @@ namespace Abi.Services
 
         private void AddCookie(string cookieName, string cookieValue)
         {
-            _httpContext.Response.Cookies.Append(cookieName, cookieValue);
+            AddCookie(cookieName, cookieValue, DateTimeOffset.Now.AddYears(5));
+        }
+
+        private void AddCookie(string cookieName, string cookieValue, DateTimeOffset? expires)
+        {
+            var options = new CookieOptions
+            {
+                Expires = expires,
+                Secure = true
+            };
+
+            _httpContext.Response.Cookies.Append(cookieName, cookieValue, options);
         }
 
         public void AddSessionCookie(string sessionPublicId)
         {
             string cookieName = BuildCookieName(Constants.Cookies.Session);
 
-            AddCookie(cookieName, sessionPublicId);
+            AddCookie(cookieName, sessionPublicId, null);
         }
 
         public void AddVariantCookie(string zone, string experimentId, string variantId)
