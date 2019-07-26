@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Abi.Data;
+using Abi.Data.Abstractions;
 using OrchardCore.ContentManagement;
 using YesSql;
 

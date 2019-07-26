@@ -6,9 +6,9 @@ using System.Text;
 using Xunit;
 using Xunit.Sdk;
 
-namespace Abi.Test.Extensions
+namespace Xunit
 {
-    public static class AssertExtensions
+    public partial class CustomAssert
     {
         /// <summary>
         /// Asserts that all properties of <paramref name="actual"/> have been mapped from <paramref name="expected"/>.

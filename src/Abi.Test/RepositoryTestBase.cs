@@ -6,9 +6,6 @@ using OrchardCore.ContentManagement.Metadata;
 using OrchardCore.Data;
 using OrchardCore.Environment.Shell;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
 using System.Threading.Tasks;
 using YesSql;
 using YesSql.Provider.Sqlite;
@@ -43,15 +40,12 @@ namespace Abi.Test
         protected virtual IConfiguration CreateConfiguration()
         {
             _tempFolder = new TemporaryFolder();
-            var connectionString = @"Data Source=" + _tempFolder.Folder + "yessql.db;Cache=Shared";
-            //var connectionString = "Data Source=:memory:";
+            var connectionString = $@"Data Source={_tempFolder.Folder}yessql.db;Cache=Shared";
 
             return new Configuration()
                 .UseSqLite(connectionString)
                 .SetTablePrefix(TablePrefix)
-
-                .UseDefaultIdGenerator()
-            ;
+                .UseDefaultIdGenerator();
         }
 
         protected virtual Task CreateTables(IStore store)
@@ -97,6 +91,7 @@ namespace Abi.Test
         public void Dispose()
         {
             _store?.Dispose();
+            _tempFolder?.Dispose();
         }
     }
 }

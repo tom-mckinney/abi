@@ -2,6 +2,8 @@
 using Abi.Models;
 using Abi.OrchardCore.Data.Indexes;
 using Dapper;
+using Dapper.Contrib;
+using Dapper.Contrib.Extensions;
 using OrchardCore.Data;
 using OrchardCore.Environment.Shell;
 using System;
@@ -39,12 +41,14 @@ namespace Abi.OrchardCore.Data
 
                 using (var transaction = connection.BeginTransaction())
                 {
-                    var dialect = SqlDialectFactory.For(connection);
-                    var encountersTable = dialect.QuoteForTableName($"{_tablePrefix}{Constants.CustomTables.Encounters}");
+                    encounter.Id = await connection.InsertAsync(encounter, transaction);
 
-                    var insertCommand = $"INSERT INTO {encountersTable} ({dialect.QuoteForColumnName("EncounterId")}, {dialect.QuoteForColumnName("SessionId")}, {dialect.QuoteForColumnName("VariantId")}, {dialect.QuoteForColumnName("CreatedUtc")}) VALUES (@EncounterId, @SessionId, @VariantId, @CreatedUtc)";
+                    //var dialect = SqlDialectFactory.For(connection);
+                    //var encountersTable = dialect.QuoteForTableName($"{_tablePrefix}{Constants.CustomTables.Encounters}");
 
-                    await connection.ExecuteAsync(insertCommand, encounter);
+                    //var insertCommand = $"INSERT INTO {encountersTable} ({dialect.QuoteForColumnName("EncounterId")}, {dialect.QuoteForColumnName("SessionId")}, {dialect.QuoteForColumnName("VariantId")}, {dialect.QuoteForColumnName("CreatedUtc")}) VALUES (@EncounterId, @SessionId, @VariantId, @CreatedUtc)";
+
+                    //await connection.ExecuteAsync(insertCommand, encounter);
                 
                     transaction.Commit(); // If an exception occurs the transaction is disposed and rollbacked
                 }
@@ -79,11 +83,6 @@ namespace Abi.OrchardCore.Data
 
             //    transaction.Commit(); // If an exception occurs the transaction is disposed and rollbacked
             //}
-        }
-
-        public Task SaveAsync(Encounter model)
-        {
-            throw new NotImplementedException();
         }
     }
 }

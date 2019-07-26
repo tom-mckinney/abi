@@ -2,6 +2,7 @@
 using Abi.OrchardCore;
 using Abi.OrchardCore.Data;
 using Abi.OrchardCore.Data.Indexes;
+using Dapper;
 using Moq;
 using OrchardCore.ContentManagement.Metadata;
 using System;
@@ -68,26 +69,7 @@ namespace Abi.Test.Data
         }
 
         [Fact]
-        public async Task SaveAsync_will_create_a_new_entry_for_new_model()
-        {
-            var encounter = TestData.Create<Encounter>();
-            
-            using (IStore store = await CreateStore())
-            using (var session = store.CreateSession())
-            {
-                var dbAccessor = CreateDbConnectionAccessor(store);
-
-                //var repository = new EncounterRepository(session);
-                var repository = new EncounterRepository(dbAccessor, DefaultShellSettings);
-
-                await repository.SaveAsync(encounter);
-
-                Assert.True(encounter.Id > 0);
-            }
-        }
-
-        [Fact]
-        public async Task Create_will_create_a_new_entry_for_new_model()
+        public async Task Create_will_create_an_entry_for_new_model()
         {
             //var encounter = TestData.Create<Encounter>();
 
@@ -101,7 +83,15 @@ namespace Abi.Test.Data
 
                 var encounter = await repository.CreateAsync("123", "456");
 
-                Assert.True(encounter.Id > 0);
+
+                using (var connection = dbAccessor.CreateConnection())
+                {
+                    await connection.OpenAsync();
+
+                    var newEncounter = await connection.QuerySingleAsync<Encounter>("SELECT * FROM Encounters");
+
+                    CustomAssert.AllPropertiesMapped(encounter, newEncounter);
+                }
             }
         }
     }

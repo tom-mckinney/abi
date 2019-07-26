@@ -1,4 +1,5 @@
-﻿using Abi.Models;
+﻿using Abi.Data.Abstractions;
+using Abi.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Abi.Data
 {
-    public interface IEncounterRepository : IRepository<Encounter, int>
+    public interface IEncounterRepository : IRepositoryBase<Encounter, int>
     {
         Task<Encounter> GetByPublicIdAsync(string publicId);
 
