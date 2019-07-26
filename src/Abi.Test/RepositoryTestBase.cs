@@ -7,6 +7,7 @@ using OrchardCore.Data;
 using OrchardCore.Environment.Shell;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using YesSql;
@@ -43,10 +44,12 @@ namespace Abi.Test
         {
             _tempFolder = new TemporaryFolder();
             var connectionString = @"Data Source=" + _tempFolder.Folder + "yessql.db;Cache=Shared";
+            //var connectionString = "Data Source=:memory:";
 
             return new Configuration()
                 .UseSqLite(connectionString)
                 .SetTablePrefix(TablePrefix)
+
                 .UseDefaultIdGenerator();
         }
 
