@@ -20,36 +20,44 @@ namespace Abi.Test.Data
         [Fact]
         public async Task GetAsync_returns_Encounter_by_id()
         {
-            IStore store = await CreateStore();
-
-            var encounter = TestData.Create<Encounter>(); //new Encounter { SessionId = 20, ContentVariantId = "123" };
-
-            using (var session = store.CreateSession())
+            //IStore store = await CreateStore();
+            using (var store = await CreateStore())
             {
-                session.Save(encounter);
+                var dbAccessor = CreateDbConnectionAccessor(store);
 
-                var repository = new EncounterRepository(session);
+                var encounter = TestData.Create<Encounter>(); //new Encounter { SessionId = 20, ContentVariantId = "123" };
 
-                var newEncounter = await repository.GetAsync(encounter.Id);
+                using (var session = store.CreateSession())
+                {
+                    session.Save(encounter);
 
-                Assert.Same(encounter, newEncounter);
+                    var repository = new EncounterRepository(dbAccessor, DefaultShellSettings);
+
+                    var newEncounter = await repository.GetAsync(encounter.Id);
+
+                    Assert.Same(encounter, newEncounter);
+            }
+
+
             }
         }
 
         [Fact]
         public async Task GetAllAsync_returns_all_Encounters()
         {
-            IStore store = await CreateStore();
-
             var encounter1 = new Encounter { SessionId = "20", VariantId = "123" };
             var encounter2 = new Encounter { SessionId = "30", VariantId = "321" };
-
+            
+            using (IStore store = await CreateStore())
             using (var session = store.CreateSession())
             {
+                var dbAccessor = CreateDbConnectionAccessor(store);
+
                 session.Save(encounter1);
                 session.Save(encounter2);
 
-                var repository = new EncounterRepository(session);
+                //var repository = new EncounterRepository(session);
+                var repository = new EncounterRepository(dbAccessor, DefaultShellSettings);
 
                 var newEncounter = await repository.GetAllAsync();
 
@@ -63,12 +71,14 @@ namespace Abi.Test.Data
         public async Task SaveAsync_will_create_a_new_entry_for_new_model()
         {
             var encounter = TestData.Create<Encounter>();
-
-            IStore store = await CreateStore();
-
+            
+            using (IStore store = await CreateStore())
             using (var session = store.CreateSession())
             {
-                var repository = new EncounterRepository(session);
+                var dbAccessor = CreateDbConnectionAccessor(store);
+
+                //var repository = new EncounterRepository(session);
+                var repository = new EncounterRepository(dbAccessor, DefaultShellSettings);
 
                 await repository.SaveAsync(encounter);
 
@@ -76,44 +86,22 @@ namespace Abi.Test.Data
             }
         }
 
-        protected override Task CreateTables(IStore store)
+        [Fact]
+        public async Task Create_will_create_a_new_entry_for_new_model()
         {
-            store.RegisterIndexes<EncounterIndexProvider>();
+            //var encounter = TestData.Create<Encounter>();
 
-            using (var connection = store.Configuration.ConnectionFactory.CreateConnection())
+            using (IStore store = await CreateStore())
+            using (var session = store.CreateSession())
             {
-                connection.Open();
+                var dbAccessor = CreateDbConnectionAccessor(store);
 
-                RunMigration(store, m => m.Create());
-                RunMigration(store, m => m.UpdateFrom1());
-                RunMigration(store, m => m.UpdateFrom2());
-                RunMigration(store, m => m.UpdateFrom3());
-                RunMigration(store, m => m.UpdateFrom4());
-                RunMigration(store, m => m.UpdateFrom5());
-            }
+                //var repository = new EncounterRepository(session);
+                var repository = new EncounterRepository(dbAccessor, DefaultShellSettings);
 
-            return Task.CompletedTask;
-        }
+                var encounter = await repository.CreateAsync("123", "456");
 
-        void RunMigration(IStore store, Action<Migrations> action)
-        {
-            using (var connection = store.Configuration.ConnectionFactory.CreateConnection())
-            {
-                connection.Open();
-
-                using (var transaction = connection.BeginTransaction(store.Configuration.IsolationLevel))
-                {
-                    var builder = new SchemaBuilder(store.Configuration, transaction);
-
-                    var migrations = new Migrations(new Mock<IContentDefinitionManager>().Object)
-                    {
-                        SchemaBuilder = builder
-                    };
-
-                    action(migrations);
-
-                    transaction.Commit();
-                }
+                Assert.True(encounter.Id > 0);
             }
         }
     }

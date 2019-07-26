@@ -7,6 +7,7 @@ using OrchardCore.Data.Migration;
 using OrchardCore.Flows.Models;
 using OrchardCore.Html.Model;
 using OrchardCore.Title.Model;
+using System;
 
 namespace Abi.OrchardCore
 {
@@ -88,6 +89,20 @@ namespace Abi.OrchardCore
             });
 
             return 6;
+        }
+
+        public int UpdateFrom6()
+        {
+            SchemaBuilder.CreateTable(Constants.CustomTables.Encounters, table => table
+                .Column<int>(nameof(Encounter.Id), col => col.PrimaryKey().Identity())
+                .Column<string>(nameof(Encounter.EncounterId), col => col.Unique())
+                .Column<string>(nameof(Encounter.SessionId))
+                .Column<string>(nameof(Encounter.VariantId))
+                .Column<DateTime?>(nameof(Encounter.CreatedUtc), col => col.Nullable())
+                .Column<DateTime?>(nameof(Encounter.ModifiedUtc), col => col.Nullable())
+            );
+
+            return 7;
         }
     }
 }

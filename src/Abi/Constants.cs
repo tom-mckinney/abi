@@ -20,5 +20,10 @@ namespace Abi
             public const string Experiment = "Experiment";
             public const string ContentVariant = "ContentVariant";
         }
+
+        public static class CustomTables
+        {
+            public const string Encounters = "Encounters";
+        }
     }
 }
