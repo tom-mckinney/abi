@@ -9,7 +9,20 @@ using YesSql;
 
 namespace Abi.OrchardCore.Data
 {
-    public abstract class YesSqlRepository<TModel> : IRepository<TModel, int>
+    public interface IYesSqlRepository<TInterface, TModel, TKey>
+        where TModel : TInterface
+        where TKey : struct
+    {
+        Task SaveAsync(TModel model);
+    }
+
+    public interface IYesSqlRepository<TModel, TKey> : IYesSqlRepository<IEntity<TKey>, TModel, TKey>
+        where TModel : IEntity<TKey>
+        where TKey : struct
+    {
+    }
+
+    public abstract class YesSqlRepository<TModel> : IRepository<TModel, int>, IYesSqlRepository<TModel, int>
         where TModel : class, IEntity<int>
     {
         protected readonly ISession _session;
@@ -33,7 +46,7 @@ namespace Abi.OrchardCore.Data
         {
             _session.Save(model);
 
-            return Task.CompletedTask;
+            return _session.CommitAsync();
         }
     }
 }

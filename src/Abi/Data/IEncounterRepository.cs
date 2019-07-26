@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Abi.Data
 {
-    public interface IEncounterRepository : IRepositoryBase<Encounter, int>
+    public interface IEncounterRepository : IRepository<Encounter, int>
     {
         Task<Encounter> GetByPublicIdAsync(string encounterId);
 

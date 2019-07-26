@@ -31,15 +31,20 @@ namespace Abi.Test.Data
             var wumbo = TestData.Create<Wumbo>();
 
             using (IStore store = await CreateStore())
-            using (var session = store.CreateSession())
             {
-                var repository = new WumboRepository(session);
+                using (var session = store.CreateSession())
+                {
+                    var repository = new WumboRepository(session);
 
-                await repository.SaveAsync(wumbo);
+                    await repository.SaveAsync(wumbo);
+                }
 
-                Assert.True(wumbo.Id > 0);
-                var newWumbo = Assert.Single(await session.Query<Wumbo>().ListAsync());
-                Assert.Same(wumbo, newWumbo);
+                using (var session = store.CreateSession())
+                {
+                    Assert.True(wumbo.Id > 0);
+                    var newWumbo = Assert.Single(await session.Query<Wumbo>().ListAsync());
+                    CustomAssert.AllPropertiesMapped(wumbo, newWumbo);
+                }
             }
         }
 
@@ -47,6 +52,7 @@ namespace Abi.Test.Data
         public async Task SaveAsync_will_update_existing_entry()
         {
             var existingWumbo = TestData.Create<Wumbo>();
+            Wumbo wumbo;
 
             using (IStore store = await CreateStore())
             {
@@ -57,7 +63,7 @@ namespace Abi.Test.Data
 
                 using (var session = store.CreateSession())
                 {
-                    var wumbo = new Wumbo
+                    wumbo = new Wumbo
                     {
                         Id = existingWumbo.Id,
                         Foo = "So much Wumbo",
@@ -69,11 +75,14 @@ namespace Abi.Test.Data
                     var repository = new WumboRepository(session);
 
                     await repository.SaveAsync(wumbo);
+                }
 
+                using (var session = store.CreateSession())
+                {
                     Assert.True(wumbo.Id > 0);
                     Assert.Equal(existingWumbo.Id, wumbo.Id);
                     var updatedWumbo = Assert.Single(await session.Query<Wumbo>().ListAsync());
-                    Assert.Same(wumbo, updatedWumbo);
+                    CustomAssert.AllPropertiesMapped(wumbo, updatedWumbo);
 
                     Assert.NotEqual(existingWumbo.Foo, updatedWumbo.Foo);
                     Assert.NotEqual(existingWumbo.Bar, updatedWumbo.Bar);

@@ -1,9 +1,15 @@
-﻿namespace Abi.Data.Abstractions
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Abi.Data.Abstractions
 {
-    public interface IRepository<TInterface, TModel, TKey> : IRepositoryBase<TInterface, TModel, TKey>, IDocumentRepositoryBase<TInterface, TModel, TKey>
+    public interface IRepository<TInterface, TModel, TKey>
         where TModel : TInterface
         where TKey : struct
     {
+        Task<IEnumerable<TModel>> GetAllAsync();
+
+        Task<TModel> GetAsync(TKey id);
     }
 
     public interface IRepository<TModel, TKey> : IRepository<IEntity<TKey>, TModel, TKey>

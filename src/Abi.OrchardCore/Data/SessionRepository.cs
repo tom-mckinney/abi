@@ -23,8 +23,7 @@ namespace Abi.OrchardCore.Data
                 VisitorId = visitorId
             };
 
-            _session.Save(session);
-            await _session.CommitAsync();
+            await SaveAsync(session);
 
             return session;
         }
