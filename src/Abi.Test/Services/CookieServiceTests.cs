@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 using Xunit;
 
@@ -9,9 +10,41 @@ namespace Abi.Test.Services
 {
     public class CookieServiceTests
     {
+        HttpContextAccessor _httpContextAccessor = new HttpContextAccessor();
+
         private ICookieService CreateService()
         {
-            return new CookieService(new HttpContextAccessor(), null);
+            return new CookieService(_httpContextAccessor, null);
+        }
+
+        [Fact]
+        public void GetUserIdOrDefault_returns_id_as_int_if_it_exists()
+        {
+            string userIdString = "123";
+            var identity = new ClaimsIdentity();
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userIdString));
+            _httpContextAccessor.HttpContext = new DefaultHttpContext
+            {
+                User = new ClaimsPrincipal(identity)
+            };
+
+            var service = CreateService();
+
+            int? userId = service.GetUserIdOrDefault();
+
+            Assert.Equal(123, userId);
+        }
+
+        [Fact]
+        public void GetUserIdOrDefault_returns_null_if_no_user_id()
+        {
+            _httpContextAccessor.HttpContext = new DefaultHttpContext();
+
+            var service = CreateService();
+
+            int? userId = service.GetUserIdOrDefault();
+
+            Assert.Null(userId);
         }
 
         [Theory]

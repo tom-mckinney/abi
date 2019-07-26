@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace Abi.Services
         bool TryGetSessionCookie(out string sessionId);
         bool TryGetVariantCookie(string zone, string experimentId, out string variantId);
         bool TryGetVisitorCookie(out string visitorId);
+        int? GetUserIdOrDefault();
         string BuildCookieName(params string[] parts);
     }
 
@@ -87,6 +89,18 @@ namespace Abi.Services
             string cookieName = BuildCookieName(Constants.Cookies.Visitor);
 
             return TryGetCookie(cookieName, out visitorId);
+        }
+
+        public int? GetUserIdOrDefault()
+        {
+            var userIdClaim = _httpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (int.TryParse(userIdClaim?.Value, out int userId))
+            {
+                return userId;
+            }
+
+            return null;
         }
     }
 }

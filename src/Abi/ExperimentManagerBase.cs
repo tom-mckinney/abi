@@ -39,9 +39,11 @@ namespace Abi
                 visitor = await _visitorRepository.GetByPublicIdAsync(visitorId);
             }
 
+            int? userId = _cookieService.GetUserIdOrDefault();
+
             if (visitor == null)
             {
-                visitor = await _visitorRepository.CreateAsync();
+                visitor = await _visitorRepository.CreateAsync(userId);
             }
 
             return visitor;

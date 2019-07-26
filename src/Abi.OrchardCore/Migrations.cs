@@ -63,7 +63,7 @@ namespace Abi.OrchardCore
 
             SchemaBuilder.CreateMapIndexTable(nameof(VisitorIndex), table => table
                 .Column<string>(nameof(VisitorIndex.VisitorId))
-                .Column<string>(nameof(VisitorIndex.UserId)));
+                .Column<int?>(nameof(VisitorIndex.UserId), col => col.Nullable()));
 
             return 4;
         }

@@ -10,6 +10,6 @@ namespace Abi.Data
     public interface IVisitorRepository : IRepository<Visitor, int>
     {
         Task<Visitor> GetByPublicIdAsync(string publicId);
-        Task<Visitor> CreateAsync();
+        Task<Visitor> CreateAsync(int? userId);
     }
 }
