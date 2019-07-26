@@ -92,7 +92,7 @@ namespace Abi.Test.Data
             //var encounter = TestData.Create<Encounter>();
 
             using (IStore store = await CreateStore())
-            using (var session = store.CreateSession())
+            //using (var session = store.CreateSession())
             {
                 var dbAccessor = CreateDbConnectionAccessor(store);
 

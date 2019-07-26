@@ -18,7 +18,7 @@ namespace Abi.Test
 {
     public abstract class RepositoryTestBase : IDisposable
     {
-        protected virtual string TablePrefix => "tp";
+        protected virtual string TablePrefix => "";
 
         protected TemporaryFolder _tempFolder;
 
@@ -50,7 +50,8 @@ namespace Abi.Test
                 .UseSqLite(connectionString)
                 .SetTablePrefix(TablePrefix)
 
-                .UseDefaultIdGenerator();
+                .UseDefaultIdGenerator()
+            ;
         }
 
         protected virtual Task CreateTables(IStore store)
