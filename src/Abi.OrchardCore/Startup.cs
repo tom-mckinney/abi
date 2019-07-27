@@ -25,7 +25,7 @@ namespace Abi.OrchardCore
         {
             services.AddHttpContextAccessor();
 
-            services.AddSingleton<ContentBalancer>();
+            services.AddSingleton<IContentBalancer, ContentBalancer>();
             services.AddScoped<ICookieService, CookieService>();
             services.AddScoped<IExperimentManager, OrchardExperimentManager>();
             services.AddScoped<IContentPartDisplayDriver, ExperimentFlowPartDisplay>();

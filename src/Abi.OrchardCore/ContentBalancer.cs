@@ -4,7 +4,12 @@ using System.Text;
 
 namespace Abi.OrchardCore
 {
-    public class ContentBalancer
+    public interface IContentBalancer
+    {
+        int GetRandomIndex<T>(ICollection<T> collection);
+    }
+
+    public class ContentBalancer : IContentBalancer
     {
         private readonly Random _random;
 

@@ -13,7 +13,7 @@ namespace Abi.OrchardCore
 
     public class OrchardExperimentManager : ExperimentManagerBase, IExperimentManager
     {
-        private readonly ContentBalancer _contentBalancer;
+        private readonly IContentBalancer _contentBalancer;
 
         public OrchardExperimentManager(
             IVisitorRepository visitorRepository,
@@ -21,7 +21,7 @@ namespace Abi.OrchardCore
             IVariantRepository variantRepository,
             IEncounterRepository encounterRepository,
             ICookieService cookieService,
-            ContentBalancer contentBalancer)
+            IContentBalancer contentBalancer)
             : base(
                   visitorRepository,
                   sessionRepository,
@@ -68,7 +68,7 @@ namespace Abi.OrchardCore
             return content;
         }
 
-        public virtual async Task<string> GetContentVariantIdAsync(Variant variant, FlowPart content)
+        public virtual async Task<string> SetVariantAsync(Variant variant, FlowPart content, string zone, string experimentId)
         {
             if (variant == null || !content.Widgets.Any(c => c.ContentItemId == variant.ContentItemId))
             {
@@ -85,6 +85,8 @@ namespace Abi.OrchardCore
                     await _variantRepository.UpdateAsync(variant);
                 }
             }
+
+            _cookieService.AddVariantCookie(zone, experimentId, variant.VariantId);
 
             return variant.ContentItemId;
         }

@@ -22,7 +22,7 @@ namespace Abi.Test
             protected readonly Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>(MockBehavior.Strict);
             protected readonly Mock<IEncounterRepository> _encounterRepositoryMock = new Mock<IEncounterRepository>(MockBehavior.Strict);
             protected readonly Mock<ICookieService> _cookieServiceMock = new Mock<ICookieService>(MockBehavior.Strict);
-            protected readonly Mock<ContentBalancer> _contentBalancerMock = new Mock<ContentBalancer>();
+            protected readonly Mock<IContentBalancer> _contentBalancerMock = new Mock<IContentBalancer>();
 
             protected OrchardExperimentManager CreateExperimentManager()
             {
@@ -48,56 +48,11 @@ namespace Abi.Test
             {
                 get
                 {
-                    var flowPart = new FlowPart { ContentItem = new ContentItem { ContentItemId = "flowpartid" } };
+                    var flowPart = new FlowPart { ContentItem = new ContentItem { ContentItemId = "experimentflowpart123" } };
                     flowPart.Widgets.Add(new ContentItem { ContentItemId = "widget1" });
                     flowPart.Widgets.Add(new ContentItem { ContentItemId = "widget2" });
                     return flowPart;
                 }
-            }
-        }
-
-        public class GetContentVariantIdAsync : ExperimentManagerFixture
-        {
-            [Fact]
-            public async Task Use_variant_id_if_it_is_present_in_widget_list()
-            {
-                Variant variant = TestData.Create<Variant>(v => v.ContentItemId = "widget1");
-
-                var manager = CreateExperimentManager();
-
-                string actualContentItemId = await manager.GetContentVariantIdAsync(variant, SampleFlowPart);
-
-                Assert.Equal(variant.ContentItemId, actualContentItemId);
-
-                VerifyMocks();
-            }
-
-            [Fact]
-            public async Task Create_variant_if_variant_is_null()
-            {
-                string expectedContentItemId = "widget2";
-                var flowPart = SampleFlowPart;
-
-                _contentBalancerMock.Setup(m => m.GetRandomIndex(flowPart.Widgets))
-                    .Returns(1)
-                    .Verifiable();
-                _variantRepositoryMock.Setup(m => m.CreateAsync(expectedContentItemId))
-                    .ReturnsAsync(TestData.Create<Variant>(v => v.ContentItemId = expectedContentItemId))
-                    .Verifiable();
-
-                var manager = CreateExperimentManager();
-
-                string actualContentItemId = await manager.GetContentVariantIdAsync(null, SampleFlowPart);
-
-                Assert.Equal(expectedContentItemId, actualContentItemId);
-
-                VerifyMocks();
-            }
-
-            [Fact]
-            public async Task Update_existing_variant_if_variant_id_is_not_present_in_widget_list()
-            {
-
             }
         }
 
@@ -332,6 +287,87 @@ namespace Abi.Test
                 var actualVariant = await manager.GetVariantAsync("content", "experimentid123");
 
                 Assert.Null(actualVariant);
+
+                VerifyMocks();
+            }
+        }
+
+        public class SetVariantAsync : ExperimentManagerFixture
+        {
+            [Fact]
+            public async Task Use_variant_id_if_it_is_present_in_widget_list()
+            {
+                Variant variant = TestData.Create<Variant>(v =>
+                {
+                    v.VariantId = "variant123";
+                    v.ContentItemId = "widget1";
+                });
+
+                _cookieServiceMock.Setup(m => m.AddVariantCookie("content", "experimentflowpart123", "variant123"))
+                    .Verifiable();
+
+                var manager = CreateExperimentManager();
+
+                string actualContentItemId = await manager.SetVariantAsync(variant, SampleFlowPart, "content", "experimentflowpart123");
+
+                Assert.Equal(variant.ContentItemId, actualContentItemId);
+
+                VerifyMocks();
+            }
+
+            [Fact]
+            public async Task Create_variant_if_variant_is_null()
+            {
+                string expectedContentItemId = "widget2";
+                var flowPart = SampleFlowPart;
+
+                _contentBalancerMock.Setup(m => m.GetRandomIndex(flowPart.Widgets))
+                    .Returns(1)
+                    .Verifiable();
+                _variantRepositoryMock.Setup(m => m.CreateAsync(expectedContentItemId))
+                    .ReturnsAsync(TestData.Create<Variant>(v =>
+                    {
+                        v.VariantId = "variant123";
+                        v.ContentItemId = expectedContentItemId;
+                    }))
+                    .Verifiable();
+                _cookieServiceMock.Setup(m => m.AddVariantCookie("content", "experimentflowpart123", "variant123"))
+                    .Verifiable();
+
+                var manager = CreateExperimentManager();
+
+                string actualContentItemId = await manager.SetVariantAsync(null, flowPart, "content", "experimentflowpart123");
+
+                Assert.Equal(expectedContentItemId, actualContentItemId);
+
+                VerifyMocks();
+            }
+
+            [Fact]
+            public async Task Update_existing_variant_if_variant_id_is_not_present_in_widget_list()
+            {
+                Variant variant = TestData.Create<Variant>(v =>
+                {
+                    v.VariantId = "variant123";
+                    v.ContentItemId = "badwidget0";
+                });
+                string expectedContentItemId = "widget2";
+                var flowPart = SampleFlowPart;
+
+                _contentBalancerMock.Setup(m => m.GetRandomIndex(flowPart.Widgets))
+                    .Returns(1)
+                    .Verifiable();
+                _variantRepositoryMock.Setup(m => m.UpdateAsync(variant))
+                    .Returns(Task.CompletedTask)
+                    .Verifiable();
+                _cookieServiceMock.Setup(m => m.AddVariantCookie("content", "experimentflowpart123", "variant123"))
+                    .Verifiable();
+
+                var manager = CreateExperimentManager();
+
+                string actualContentItemId = await manager.SetVariantAsync(variant, flowPart, "content", "experimentflowpart123");
+
+                Assert.Equal(expectedContentItemId, actualContentItemId);
 
                 VerifyMocks();
             }
