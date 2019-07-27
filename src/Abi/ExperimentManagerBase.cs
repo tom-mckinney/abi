@@ -30,7 +30,7 @@ namespace Abi
             _cookieService = cookieService;
         }
 
-        protected virtual async Task<Visitor> GetOrCreateVisitorAsync()
+        public virtual async Task<Visitor> GetOrCreateVisitorAsync()
         {
             Visitor visitor = null;
 
@@ -46,10 +46,12 @@ namespace Abi
                 visitor = await _visitorRepository.CreateAsync(userId);
             }
 
+            _cookieService.AddVisitorCookie(visitor.VisitorId);
+
             return visitor;
         }
 
-        protected virtual async Task<Session> GetOrCreateSessionAsync(string visitorId)
+        public virtual async Task<Session> GetOrCreateSessionAsync(string visitorId)
         {
             Session session = null;
 
@@ -63,10 +65,12 @@ namespace Abi
                 session = await _sessionRepository.CreateAsync(visitorId);
             }
 
+            _cookieService.AddSessionCookie(session.SessionId);
+
             return session;
         }
 
-        protected virtual async Task<Variant> GetVariantAsync(string zone, string experimentId)
+        public virtual async Task<Variant> GetVariantAsync(string zone, string experimentId)
         {
             Variant variant = null;
 
@@ -78,7 +82,7 @@ namespace Abi
             return variant;
         }
 
-        protected virtual Task<Encounter> CreateEncounterAsync(string sessionId, string variantId)
+        public virtual Task<Encounter> CreateEncounterAsync(string sessionId, string variantId)
         {
             return _encounterRepository.CreateAsync(sessionId, variantId);
         }

@@ -13,9 +13,6 @@ namespace Abi.OrchardCore
 
     public class OrchardExperimentManager : ExperimentManagerBase, IExperimentManager
     {
-        //private readonly IVisitorRepository _visitorRepository;
-        //private readonly ISessionRepository _sessionRepository;
-        //private readonly ICookieService _cookieService;
         private readonly ContentBalancer _contentBalancer;
 
         public OrchardExperimentManager(
@@ -32,9 +29,6 @@ namespace Abi.OrchardCore
                   encounterRepository,
                   cookieService)
         {
-            //_visitorRepository = visitorRepository;
-            //_sessionRepository = sessionRepository;
-            //_cookieService = cookieService;
             _contentBalancer = contentBalancer;
         }
 
@@ -44,10 +38,8 @@ namespace Abi.OrchardCore
             string experimentId = content.ContentItem.ContentItemId;
 
             Visitor visitor = await GetOrCreateVisitorAsync();
-            _cookieService.AddVisitorCookie(visitor.VisitorId);
 
             Session session = await GetOrCreateSessionAsync(visitor.VisitorId);
-            _cookieService.AddSessionCookie(session.SessionId);
 
             Variant variant = await GetVariantAsync(zone, experimentId);
 
@@ -74,6 +66,27 @@ namespace Abi.OrchardCore
             content.Widgets.RemoveAll(c => c.ContentItemId != variant.ContentItemId);
 
             return content;
+        }
+
+        public virtual async Task<string> GetContentVariantIdAsync(Variant variant, FlowPart content)
+        {
+            if (variant == null || !content.Widgets.Any(c => c.ContentItemId == variant.ContentItemId))
+            {
+                int variantIndex = _contentBalancer.GetRandomIndex(content.Widgets); // TODO: make this personalized/influenced by history
+                string variantContentId = content.Widgets.ElementAt(variantIndex).ContentItemId;
+
+                if (variant == null)
+                {
+                    variant = await _variantRepository.CreateAsync(variantContentId);
+                }
+                else
+                {
+                    variant.ContentItemId = variantContentId;
+                    await _variantRepository.UpdateAsync(variant);
+                }
+            }
+
+            return variant.ContentItemId;
         }
     }
 }

@@ -49,5 +49,14 @@ namespace Abi.Test
 
             return model;
         }
+
+        public static TModel Create<TModel>(Action<TModel> callback) where TModel : class
+        {
+            TModel model = Create<TModel>();
+
+            callback(model);
+
+            return model;
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace Abi.OrchardCore
             _random = new Random();
         }
 
-        public int GetRandomIndex<T>(ICollection<T> collection)
+        public virtual int GetRandomIndex<T>(ICollection<T> collection)
         {
             return _random.Next(0, collection.Count);
         }
