@@ -43,23 +43,7 @@ namespace Abi.OrchardCore
 
             Variant variant = await GetVariantAsync(zone, experimentId);
 
-            if (variant == null || !content.Widgets.Any(c => c.ContentItemId == variant.ContentItemId))
-            {
-                int variantIndex = _contentBalancer.GetRandomIndex(content.Widgets); // TODO: make this personalized/influenced by history
-                string variantContentId = content.Widgets.ElementAt(variantIndex).ContentItemId;
-
-                if (variant == null)
-                {
-                    variant = await _variantRepository.CreateAsync(variantContentId);
-                }
-                else
-                {
-                    variant.ContentItemId = variantContentId;
-                    await _variantRepository.UpdateAsync(variant);
-                }
-            }
-
-            _cookieService.AddVariantCookie(zone, experimentId, variant.VariantId);
+            variant = await SetVariantAsync(variant, content, zone, experimentId);
 
             await CreateEncounterAsync(session.SessionId, variant.VariantId);
 
@@ -68,7 +52,7 @@ namespace Abi.OrchardCore
             return content;
         }
 
-        public virtual async Task<string> SetVariantAsync(Variant variant, FlowPart content, string zone, string experimentId)
+        public virtual async Task<Variant> SetVariantAsync(Variant variant, FlowPart content, string zone, string experimentId)
         {
             if (variant == null || !content.Widgets.Any(c => c.ContentItemId == variant.ContentItemId))
             {
@@ -88,7 +72,7 @@ namespace Abi.OrchardCore
 
             _cookieService.AddVariantCookie(zone, experimentId, variant.VariantId);
 
-            return variant.ContentItemId;
+            return variant;
         }
     }
 }

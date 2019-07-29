@@ -2,11 +2,13 @@
 using Abi.Models;
 using Abi.OrchardCore;
 using Abi.Services;
+using Abi.Test.Fixtures;
 using Moq;
 using OrchardCore.ContentManagement;
 using OrchardCore.Flows.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -15,44 +17,95 @@ namespace Abi.Test
 {
     public class OrchardExperimentManagerTests
     {
-        public class ExperimentManagerFixture
+        public class Integration : ExperimentManagerFixture
         {
-            protected readonly Mock<IVisitorRepository> _visitorRepositoryMock = new Mock<IVisitorRepository>(MockBehavior.Strict);
-            protected readonly Mock<ISessionRepository> _sessionRepositoryMock = new Mock<ISessionRepository>(MockBehavior.Strict);
-            protected readonly Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>(MockBehavior.Strict);
-            protected readonly Mock<IEncounterRepository> _encounterRepositoryMock = new Mock<IEncounterRepository>(MockBehavior.Strict);
-            protected readonly Mock<ICookieService> _cookieServiceMock = new Mock<ICookieService>(MockBehavior.Strict);
-            protected readonly Mock<IContentBalancer> _contentBalancerMock = new Mock<IContentBalancer>();
-
-            protected OrchardExperimentManager CreateExperimentManager()
+            private class OrchardExperimentManagerSpy : OrchardExperimentManager
             {
-                return new OrchardExperimentManager(_visitorRepositoryMock.Object,
-                    _sessionRepositoryMock.Object,
-                    _variantRepositoryMock.Object,
-                    _encounterRepositoryMock.Object,
-                    _cookieServiceMock.Object,
-                    _contentBalancerMock.Object);
-            }
+                private readonly string _expectedContentItemId;
 
-            protected void VerifyMocks()
-            {
-                _visitorRepositoryMock.Verify();
-                _sessionRepositoryMock.Verify();
-                _variantRepositoryMock.Verify();
-                _encounterRepositoryMock.Verify();
-                _cookieServiceMock.Verify();
-                _contentBalancerMock.Verify();
-            }
-
-            protected FlowPart SampleFlowPart
-            {
-                get
+                public OrchardExperimentManagerSpy(string expectedContentItemId) : base(null, null, null, null, null, null)
                 {
-                    var flowPart = new FlowPart { ContentItem = new ContentItem { ContentItemId = "experimentflowpart123" } };
-                    flowPart.Widgets.Add(new ContentItem { ContentItemId = "widget1" });
-                    flowPart.Widgets.Add(new ContentItem { ContentItemId = "widget2" });
-                    return flowPart;
+                    _expectedContentItemId = expectedContentItemId;
                 }
+
+                public Visitor Visitor => TestData.Create<Visitor>(v =>
+                {
+                    v.VisitorId = "visitorid123";
+                    v.UserId = 14;
+                });
+                public Session Session => TestData.Create<Session>(s =>
+                {
+                    s.SessionId = "sessionid123";
+                    s.VisitorId = Visitor.VisitorId;
+                });
+                public Variant Variant => TestData.Create<Variant>(v =>
+                {
+                    v.VariantId = "variantid123";
+                    v.ContentItemId = _expectedContentItemId;
+                });
+                public Encounter Encounter => TestData.Create<Encounter>(e =>
+                {
+                    e.EncounterId = "encounterid123";
+                    e.SessionId = Session.SessionId;
+                });
+
+                public bool CalledGetOrCreateVisitorAsync { get; set; }
+                public override Task<Visitor> GetOrCreateVisitorAsync()
+                {
+                    CalledGetOrCreateVisitorAsync = true;
+                    return Task.FromResult(Visitor);
+                }
+
+                public bool CalledGetOrCreateSessionAsync { get; set; }
+                public override Task<Session> GetOrCreateSessionAsync(string visitorId)
+                {
+                    Assert.Equal(Visitor.VisitorId, visitorId);
+                    CalledGetOrCreateSessionAsync = true;
+                    return Task.FromResult(Session);
+                }
+
+                public bool CalledGetVariantAsync { get; set; }
+                public override Task<Variant> GetVariantAsync(string zone, string experimentId)
+                {
+                    CalledGetVariantAsync = true;
+                    return Task.FromResult(Variant);
+                }
+
+                public bool CalledSetVariantAsync { get; set; }
+                public override Task<Variant> SetVariantAsync(Variant variant, FlowPart content, string zone, string experimentId)
+                {
+                    CalledSetVariantAsync = true;
+                    return Task.FromResult(Variant);
+                }
+
+                public bool CalledCreateEncounterAsync { get; set; }
+                public override Task<Encounter> CreateEncounterAsync(string sessionId, string variantId)
+                {
+                    Assert.Equal(Session.SessionId, sessionId);
+                    Assert.Equal(Variant.VariantId, variantId);
+                    CalledCreateEncounterAsync = true;
+                    return Task.FromResult(Encounter);
+                }
+            }
+
+            [Fact]
+            public async Task All_methods_called()
+            {
+                var flowPart = SampleFlowPart;
+                string expectedContentItemId = flowPart.Widgets.Last().ContentItemId;
+
+                var managerSpy = new OrchardExperimentManagerSpy(expectedContentItemId);
+
+                var filteredFlowPart = await managerSpy.GetOrSetVariantAsync(SampleFlowPart);
+
+                Assert.True(managerSpy.CalledGetOrCreateVisitorAsync);
+                Assert.True(managerSpy.CalledGetOrCreateSessionAsync);
+                Assert.True(managerSpy.CalledGetVariantAsync);
+                Assert.True(managerSpy.CalledSetVariantAsync);
+                Assert.True(managerSpy.CalledCreateEncounterAsync);
+
+                var variantContentItem = Assert.Single(filteredFlowPart.Widgets);
+                Assert.Equal(expectedContentItemId, variantContentItem.ContentItemId);
             }
         }
 
@@ -308,9 +361,9 @@ namespace Abi.Test
 
                 var manager = CreateExperimentManager();
 
-                string actualContentItemId = await manager.SetVariantAsync(variant, SampleFlowPart, "content", "experimentflowpart123");
+                Variant actualVariant = await manager.SetVariantAsync(variant, SampleFlowPart, "content", "experimentflowpart123");
 
-                Assert.Equal(variant.ContentItemId, actualContentItemId);
+                Assert.Equal(variant.ContentItemId, actualVariant.ContentItemId);
 
                 VerifyMocks();
             }
@@ -336,9 +389,9 @@ namespace Abi.Test
 
                 var manager = CreateExperimentManager();
 
-                string actualContentItemId = await manager.SetVariantAsync(null, flowPart, "content", "experimentflowpart123");
+                Variant actualVariant = await manager.SetVariantAsync(null, flowPart, "content", "experimentflowpart123");
 
-                Assert.Equal(expectedContentItemId, actualContentItemId);
+                Assert.Equal(expectedContentItemId, actualVariant.ContentItemId);
 
                 VerifyMocks();
             }
@@ -365,9 +418,9 @@ namespace Abi.Test
 
                 var manager = CreateExperimentManager();
 
-                string actualContentItemId = await manager.SetVariantAsync(variant, flowPart, "content", "experimentflowpart123");
+                Variant actualVariant = await manager.SetVariantAsync(variant, flowPart, "content", "experimentflowpart123");
 
-                Assert.Equal(expectedContentItemId, actualContentItemId);
+                Assert.Equal(expectedContentItemId, actualVariant.ContentItemId);
 
                 VerifyMocks();
             }
