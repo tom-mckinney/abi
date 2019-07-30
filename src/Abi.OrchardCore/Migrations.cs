@@ -27,7 +27,6 @@ namespace Abi.OrchardCore
         public async Task<int> CreateAsync()
         {
             _contentDefinitionManager.AlterTypeDefinition(Constants.Types.Experiment, type => type
-                .Stereotype("Widget")
                 .Draftable()
                 .Versionable()
                 .Securable()

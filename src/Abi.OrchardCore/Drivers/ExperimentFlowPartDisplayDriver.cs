@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Abi.OrchardCore.Drivers
 {
-    public class ExperimentFlowPartDisplay : ContentPartDisplayDriver<FlowPart>
+    public class ExperimentFlowPartDisplayDriver : ContentPartDisplayDriver<FlowPart>
     {
         private readonly IExperimentManager _experimentManager;
 
-        public ExperimentFlowPartDisplay(IExperimentManager experimentManager)
+        public ExperimentFlowPartDisplayDriver(IExperimentManager experimentManager)
         {
             _experimentManager = experimentManager;
         }
