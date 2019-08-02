@@ -371,13 +371,14 @@ namespace Abi.Test
             [Fact]
             public async Task Create_variant_if_variant_is_null()
             {
+                string expectedExpirimentId = "experimentflowpart123";
                 string expectedContentItemId = "widget2";
                 var flowPart = SampleFlowPart;
 
                 _contentBalancerMock.Setup(m => m.GetRandomIndex(flowPart.Widgets))
                     .Returns(1)
                     .Verifiable();
-                _variantRepositoryMock.Setup(m => m.CreateAsync(expectedContentItemId))
+                _variantRepositoryMock.Setup(m => m.CreateAsync(expectedExpirimentId, expectedContentItemId))
                     .ReturnsAsync(TestData.Create<Variant>(v =>
                     {
                         v.VariantId = "variant123";
@@ -389,8 +390,9 @@ namespace Abi.Test
 
                 var manager = CreateExperimentManager();
 
-                Variant actualVariant = await manager.SetVariantAsync(null, flowPart, "content", "experimentflowpart123");
+                Variant actualVariant = await manager.SetVariantAsync(null, flowPart, "content", expectedExpirimentId);
 
+                Assert.Equal(expectedContentItemId, actualVariant.ExperimentId);
                 Assert.Equal(expectedContentItemId, actualVariant.ContentItemId);
 
                 VerifyMocks();

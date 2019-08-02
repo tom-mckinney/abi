@@ -10,6 +10,8 @@ namespace Abi.OrchardCore.Data.Indexes
     {
         public string VariantId { get; set; }
 
+        public string ExperimentId { get; set; }
+
         public string ContentItemid { get; set; }
     }
 
@@ -20,6 +22,7 @@ namespace Abi.OrchardCore.Data.Indexes
             context.For<VariantIndex>().Map(v => new VariantIndex
             {
                 VariantId = v.VariantId,
+                ExperimentId = v.ExperimentId,
                 ContentItemid = v.ContentItemId
             });
         }

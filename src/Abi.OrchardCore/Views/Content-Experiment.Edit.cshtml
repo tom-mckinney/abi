@@ -6,6 +6,7 @@
 @{
     var tabs = (IEnumerable<string>)ZoneShapes.HarvestAndSortTabs(Model.Parts);
 
+    string experimentId = Model.ContentItem.ContentItemId;
     var visitors = await visitorRepository.GetAllAsync();
     var sessions = await sessionRepository.GetAllAsync();
     var variants = await variantRepository.GetAllAsync();
@@ -39,7 +40,7 @@
                         <div class="col-6">
                             <table>
                                 <tbody>
-                                    @foreach (var variant in variants)
+                                    @foreach (var variant in variants.Where(v => v.ExperimentId == experimentId))
                                     {
                                         var encountersForVariant = encounters.Where(e => e.VariantId == variant.VariantId);
 

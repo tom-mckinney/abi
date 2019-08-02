@@ -62,5 +62,13 @@ namespace Abi.OrchardCore
 
             return 1;
         }
+
+        public Task<int> UpdateFrom1Async()
+        {
+            SchemaBuilder.AlterTable(nameof(VariantIndex), table => table
+                .AddColumn<string>(nameof(VariantIndex.ExperimentId)));
+
+            return Task.FromResult(2);
+        }
     }
 }

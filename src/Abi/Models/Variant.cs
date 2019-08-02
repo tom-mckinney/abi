@@ -8,6 +8,8 @@ namespace Abi.Models
     {
         public string VariantId { get; set; }
 
+        public string ExperimentId { get; set; }
+
         public string ContentItemId { get; set; }
     }
 }

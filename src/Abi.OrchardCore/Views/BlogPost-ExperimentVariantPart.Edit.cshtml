@@ -1,0 +1,5 @@
+﻿@model Abi.OrchardCore.ViewModels.ExperimentVariantViewModel
+
+<h1>@Model.Title</h1>
+
+@await DisplayAsync(Model.ExperimentVariantPart.Content.Experiment.Content)

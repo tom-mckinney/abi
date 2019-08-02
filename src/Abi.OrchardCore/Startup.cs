@@ -3,11 +3,13 @@ using Abi.OrchardCore.Data;
 using Abi.OrchardCore.Data.Indexes;
 using Abi.OrchardCore.Drivers;
 using Abi.OrchardCore.Filters;
+using Abi.OrchardCore.Models;
 using Abi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.Data.Migration;
 using OrchardCore.Liquid;
@@ -29,6 +31,10 @@ namespace Abi.OrchardCore
             services.AddScoped<ICookieService, CookieService>();
             services.AddScoped<IExperimentManager, OrchardExperimentManager>();
             services.AddScoped<IContentPartDisplayDriver, ExperimentFlowPartDisplayDriver>();
+
+            // ExperimentVariantPart
+            services.AddSingleton<ContentPart, ExperimentVariantPart>();
+            services.AddScoped<IContentPartDisplayDriver, ExperimentVariantPartDisplayDriver>();
 
             services.AddScoped<IDataMigration, Migrations>();
             services.AddScoped<IPermissionProvider, Permissions>();

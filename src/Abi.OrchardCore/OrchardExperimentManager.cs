@@ -61,7 +61,7 @@ namespace Abi.OrchardCore
 
                 if (variant == null)
                 {
-                    variant = await _variantRepository.CreateAsync(variantContentId);
+                    variant = await _variantRepository.CreateAsync(experimentId, variantContentId);
                 }
                 else
                 {
