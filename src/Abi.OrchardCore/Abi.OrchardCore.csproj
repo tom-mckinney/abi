@@ -6,17 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper.Contrib" Version="1.50.5" />
+    <PackageReference Include="Dapper.Contrib" Version="1.60.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="OrchardCore.ContentFields" Version="1.0.0-beta3-71904" />
-    <PackageReference Include="OrchardCore.Contents" Version="1.0.0-beta3-71904" />
-    <PackageReference Include="OrchardCore.Data.Abstractions" Version="1.0.0-beta3-71904" />
-    <PackageReference Include="OrchardCore.Flows" Version="1.0.0-beta3-71904" />
-    <PackageReference Include="OrchardCore.Html" Version="1.0.0-beta3-71904" />
-    <PackageReference Include="OrchardCore.Lists" Version="1.0.0-beta3-71904" />
-    <PackageReference Include="OrchardCore.Module.Targets" Version="1.0.0-beta3-71904" />
-    <PackageReference Include="OrchardCore.Title" Version="1.0.0-beta3-71904" />
-    <PackageReference Include="OrchardCore.Users" Version="1.0.0-beta3-71904" />
+    <PackageReference Include="OrchardCore.ContentFields" Version="1.0.0-beta3-72050" />
+    <PackageReference Include="OrchardCore.Contents" Version="1.0.0-beta3-72050" />
+    <PackageReference Include="OrchardCore.Data.Abstractions" Version="1.0.0-beta3-72050" />
+    <PackageReference Include="OrchardCore.Flows" Version="1.0.0-beta3-72050" />
+    <PackageReference Include="OrchardCore.Html" Version="1.0.0-beta3-72050" />
+    <PackageReference Include="OrchardCore.Lists" Version="1.0.0-beta3-72050" />
+    <PackageReference Include="OrchardCore.Module.Targets" Version="1.0.0-beta3-72050" />
+    <PackageReference Include="OrchardCore.Title" Version="1.0.0-beta3-72050" />
+    <PackageReference Include="OrchardCore.Users" Version="1.0.0-beta3-72050" />
   </ItemGroup>
 
   <ItemGroup>
