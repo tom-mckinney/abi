@@ -2,7 +2,6 @@
 using Abi.OrchardCore;
 using Abi.OrchardCore.Data;
 using Abi.OrchardCore.Data.Indexes;
-using Dapper;
 using Dapper.Contrib.Extensions;
 using Moq;
 using OrchardCore.ContentManagement.Metadata;
@@ -137,7 +136,8 @@ namespace Abi.Test.Data
                 {
                     await connection.OpenAsync();
 
-                    var newEncounter = await connection.QuerySingleAsync<Encounter>("SELECT * FROM Encounters");
+                    //(await connection.GetAllAsync<Encounter>()).Single()
+                    var newEncounter = (await connection.GetAllAsync<Encounter>()).Single();
 
                     CustomAssert.AllPropertiesMapped(encounter, newEncounter);
                 }

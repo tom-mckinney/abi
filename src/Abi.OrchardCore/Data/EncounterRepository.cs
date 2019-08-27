@@ -6,6 +6,7 @@ using OrchardCore.Data;
 using OrchardCore.Environment.Shell;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using YesSql;
 
@@ -67,18 +68,20 @@ namespace Abi.OrchardCore.Data
             }
         }
 
-        public Task<Encounter> GetByPublicIdAsync(string encounterId)
+        public async Task<Encounter> GetByPublicIdAsync(string encounterId)
         {
             using (var connection = _dbAccessor.CreateConnection())
             {
                 connection.Open();
+
+                return (await connection.GetAllAsync<Encounter>()).FirstOrDefault(e => e.EncounterId == encounterId); // TODO: remove after Dapper version resolution
 
                 var dialect = SqlDialectFactory.For(connection);
                 var customTable = dialect.QuoteForTableName(_tablePrefix + Constants.CustomTables.Encounters);
 
                 var selectCommand = $"SELECT * FROM {customTable} WHERE {dialect.QuoteForColumnName(nameof(Encounter.EncounterId))} = @EncounterId";
 
-                return connection.QueryFirstOrDefaultAsync<Encounter>(selectCommand, new { EncounterId = encounterId });
+                //return connection.QueryFirstOrDefaultAsync<Encounter>(selectCommand, new { EncounterId = encounterId });
             }
         }
     }
