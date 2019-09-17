@@ -57,19 +57,36 @@ namespace Abi.OrchardCore
             services.AddLiquidFilter<AbiFilter>("abi");
         }
 
-        public override void Configure(IApplicationBuilder builder, IRouteBuilder routes, IServiceProvider serviceProvider)
+        public override void Configure(IApplicationBuilder app, IEndpointRouteBuilder routes, IServiceProvider serviceProvider)
         {
-            routes.MapAreaRoute(
+            //base.Configure(app, routes, serviceProvider);
+
+            routes.MapAreaControllerRoute(
                 name: "ListExperiments",
                 areaName: "Abi.OrchardCore",
-                template: "/Admin/Experiments",
+                pattern: "/Admin/Experiments",
                 defaults: new { controller = "Admin", action = "List" });
 
-            routes.MapAreaRoute(
+            routes.MapAreaControllerRoute(
                 name: "DisplayExperiment",
                 areaName: "Abi.OrchardCore",
-                template: "/Admin/Experiments/{contentItemId}",
+                pattern: "/Admin/Experiments/{contentItemId}",
                 defaults: new { controller = "Admin", action = "Display" });
         }
+
+        //public override void Configure(IApplicationBuilder builder, IRouteBuilder routes, IServiceProvider serviceProvider)
+        //{
+        //    routes.MapAreaRoute(
+        //        name: "ListExperiments",
+        //        areaName: "Abi.OrchardCore",
+        //        template: "/Admin/Experiments",
+        //        defaults: new { controller = "Admin", action = "List" });
+
+        //    routes.MapAreaRoute(
+        //        name: "DisplayExperiment",
+        //        areaName: "Abi.OrchardCore",
+        //        template: "/Admin/Experiments/{contentItemId}",
+        //        defaults: new { controller = "Admin", action = "Display" });
+        //}
     }
 }

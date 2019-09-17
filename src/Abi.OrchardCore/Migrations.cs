@@ -5,9 +5,9 @@ using OrchardCore.ContentManagement.Metadata;
 using OrchardCore.ContentManagement.Metadata.Settings;
 using OrchardCore.Data.Migration;
 using OrchardCore.Flows.Models;
-using OrchardCore.Html.Model;
+using OrchardCore.Html.Models;
 using OrchardCore.Recipes.Services;
-using OrchardCore.Title.Model;
+using OrchardCore.Title.Models;
 using System;
 using System.Threading.Tasks;
 

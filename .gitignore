@@ -38,3 +38,5 @@ msbuild.wrn
 
 # Orchard
 App_Data/
+is-cache/
+Properties/
