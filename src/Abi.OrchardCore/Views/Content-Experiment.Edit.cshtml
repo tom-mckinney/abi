@@ -15,6 +15,19 @@
 
 <style asp-src="~/OrchardCore.Contents/Styles/Contents.min.css" debug-src="~/OrchardCore.Contents/Styles/Contents.css"></style>
 
+<div id="expiriment">
+    <h1>{{ name }}</h1>
+</div>
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            name: 'Wumbo'
+        }
+    });
+</script>
+
 <div class="edit-container">
     <div class="edit-body">
         <div class="edit-item-primary">
