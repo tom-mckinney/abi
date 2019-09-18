@@ -38,7 +38,11 @@ msbuild.wrn
 
 # Orchard
 App_Data/
-dist/
 is-cache/
-node_modules/
 Properties/
+
+# NodeJS
+node_modules/
+
+# Abi
+**/wwwroot/Scripts/

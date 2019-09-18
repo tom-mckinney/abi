@@ -11,7 +11,7 @@ module.exports = {
   },
 
   output: {
-    path: path.resolve(__dirname, 'wwwroot/dist/js')
+    path: path.resolve(__dirname, '../Abi.OrchardCore/wwwroot/Scripts')
   },
 
   resolve: {

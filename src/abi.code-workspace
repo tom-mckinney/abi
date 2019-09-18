@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "Abi"
+		},
+		{
+			"path": "Abi.Web"
+		},
+		{
+			"path": "Abi.OrchardCore"
+		},
+		{
+			"path": "Abi.Test"
+		},
+		{
+			"path": "Samples\\BasicCms"
+		}
+	],
+	"settings": {}
+}
