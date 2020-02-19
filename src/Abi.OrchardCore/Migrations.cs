@@ -15,7 +15,7 @@ namespace Abi.OrchardCore
 {
     public class Migrations : DataMigration
     {
-        IContentDefinitionManager _contentDefinitionManager;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IRecipeMigrator _recipeMigrator;
 
         public Migrations(IContentDefinitionManager contentDefinitionManager, IRecipeMigrator recipeMigrator)

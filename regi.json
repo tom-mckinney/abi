@@ -1,0 +1,87 @@
+{
+  "apps": [
+    {
+      "name": "Abi",
+      "paths": [
+        "C:/code/abi/src/Abi"
+      ],
+      "type": "web",
+      "framework": "dotnet",
+      "commands": {},
+      "requires": [],
+      "arguments": {},
+      "port": 8080,
+      "environment": {},
+      "serial": false,
+      "rawOutput": false,
+      "optional": false
+    },
+    {
+      "name": "Abi.OrchardCore",
+      "paths": [
+        "C:/code/abi/src/Abi.OrchardCore"
+      ],
+      "type": "web",
+      "framework": "dotnet",
+      "commands": {},
+      "requires": [],
+      "arguments": {},
+      "port": 8081,
+      "environment": {},
+      "serial": false,
+      "rawOutput": false,
+      "optional": false
+    },
+    {
+      "name": "Abi.Web",
+      "paths": [
+        "C:/code/abi/src/Abi.Web"
+      ],
+      "type": "web",
+      "framework": "dotnet",
+      "commands": {},
+      "requires": [],
+      "arguments": {},
+      "port": 8083,
+      "environment": {},
+      "serial": false,
+      "rawOutput": false,
+      "optional": false
+    },
+    {
+      "name": "BasicCms",
+      "paths": [
+        "C:/code/abi/src/Samples/BasicCms"
+      ],
+      "type": "web",
+      "framework": "dotnet",
+      "commands": {},
+      "requires": [],
+      "arguments": {},
+      "port": 8084,
+      "environment": {},
+      "serial": false,
+      "rawOutput": false,
+      "optional": false
+    }
+  ],
+  "tests": [
+    {
+      "name": "Abi.Test",
+      "paths": [
+        "C:/code/abi/src/Abi.Test"
+      ],
+      "type": "unit",
+      "framework": "dotnet",
+      "commands": {},
+      "requires": [],
+      "arguments": {},
+      "environment": {},
+      "serial": false,
+      "rawOutput": false,
+      "optional": false
+    }
+  ],
+  "services": [],
+  "sources": {}
+}

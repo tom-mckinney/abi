@@ -30,6 +30,8 @@ namespace Abi.OrchardCore
             services.AddSingleton<IContentBalancer, ContentBalancer>();
             services.AddScoped<ICookieService, CookieService>();
             services.AddScoped<IExperimentManager, OrchardExperimentManager>();
+
+            services.AddScoped<IContentDisplayDriver, ExperimentDisplayDriver>();
             services.AddScoped<IContentPartDisplayDriver, ExperimentFlowPartDisplayDriver>();
 
             // ExperimentVariantPart
