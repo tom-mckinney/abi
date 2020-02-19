@@ -13,13 +13,14 @@ namespace Abi.OrchardCore.Data
         {
         }
 
-        public async Task<Variant> CreateAsync(string experimentId, string contentItemId)
+        public async Task<Variant> CreateAsync(string experimentId, string contentItemId, string contentItemType = null)
         {
             var variant = new Variant
             {
                 VariantId = Guid.NewGuid().ToString("n"),
                 ExperimentId = experimentId,
-                ContentItemId = contentItemId
+                ContentItemId = contentItemId,
+                ContentItemType = contentItemType,
             };
 
             _session.Save(variant);

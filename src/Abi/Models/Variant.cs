@@ -11,5 +11,7 @@ namespace Abi.Models
         public string ExperimentId { get; set; }
 
         public string ContentItemId { get; set; }
+
+        public string ContentItemType { get; set; }
     }
 }

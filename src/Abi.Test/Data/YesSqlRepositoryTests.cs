@@ -30,21 +30,20 @@ namespace Abi.Test.Data
         {
             var wumbo = TestData.Create<Wumbo>();
 
-            using (IStore store = await CreateStore())
+            using IStore store = await CreateStore();
+
+            using (var session = store.CreateSession())
             {
-                using (var session = store.CreateSession())
-                {
-                    var repository = new WumboRepository(session);
+                var repository = new WumboRepository(session);
 
-                    await repository.SaveAsync(wumbo);
-                }
+                await repository.SaveAsync(wumbo);
+            }
 
-                using (var session = store.CreateSession())
-                {
-                    Assert.True(wumbo.Id > 0);
-                    var newWumbo = Assert.Single(await session.Query<Wumbo>().ListAsync());
-                    CustomAssert.AllPropertiesMapped(wumbo, newWumbo);
-                }
+            using (var session = store.CreateSession())
+            {
+                Assert.True(wumbo.Id > 0);
+                var newWumbo = Assert.Single(await session.Query<Wumbo>().ListAsync());
+                CustomAssert.AllPropertiesMapped(wumbo, newWumbo);
             }
         }
 
@@ -54,39 +53,38 @@ namespace Abi.Test.Data
             var existingWumbo = TestData.Create<Wumbo>();
             Wumbo wumbo;
 
-            using (IStore store = await CreateStore())
+            using IStore store = await CreateStore();
+
+            using (var previousSession = store.CreateSession())
             {
-                using (var previousSession = store.CreateSession())
+                previousSession.Save(existingWumbo);
+            }
+
+            using (var session = store.CreateSession())
+            {
+                wumbo = new Wumbo
                 {
-                    previousSession.Save(existingWumbo);
-                }
+                    Id = existingWumbo.Id,
+                    Foo = "So much Wumbo",
+                    Bar = 123456,
+                    CreatedUtc = existingWumbo.CreatedUtc,
+                    ModifiedUtc = existingWumbo.ModifiedUtc
+                };
 
-                using (var session = store.CreateSession())
-                {
-                    wumbo = new Wumbo
-                    {
-                        Id = existingWumbo.Id,
-                        Foo = "So much Wumbo",
-                        Bar = 123456,
-                        CreatedUtc = existingWumbo.CreatedUtc,
-                        ModifiedUtc = existingWumbo.ModifiedUtc
-                    };
+                var repository = new WumboRepository(session);
 
-                    var repository = new WumboRepository(session);
+                await repository.SaveAsync(wumbo);
+            }
 
-                    await repository.SaveAsync(wumbo);
-                }
+            using (var session = store.CreateSession())
+            {
+                Assert.True(wumbo.Id > 0);
+                Assert.Equal(existingWumbo.Id, wumbo.Id);
+                var updatedWumbo = Assert.Single(await session.Query<Wumbo>().ListAsync());
+                CustomAssert.AllPropertiesMapped(wumbo, updatedWumbo);
 
-                using (var session = store.CreateSession())
-                {
-                    Assert.True(wumbo.Id > 0);
-                    Assert.Equal(existingWumbo.Id, wumbo.Id);
-                    var updatedWumbo = Assert.Single(await session.Query<Wumbo>().ListAsync());
-                    CustomAssert.AllPropertiesMapped(wumbo, updatedWumbo);
-
-                    Assert.NotEqual(existingWumbo.Foo, updatedWumbo.Foo);
-                    Assert.NotEqual(existingWumbo.Bar, updatedWumbo.Bar);
-                }
+                Assert.NotEqual(existingWumbo.Foo, updatedWumbo.Foo);
+                Assert.NotEqual(existingWumbo.Bar, updatedWumbo.Bar);
             }
         }
 
@@ -97,44 +95,39 @@ namespace Abi.Test.Data
             var existingWumbo2 = TestData.Create<Wumbo>();
             var existingWumbo3 = TestData.Create<Wumbo>();
 
-            using (IStore store = await CreateStore())
+            using IStore store = await CreateStore();
+
+            using (var previousSession = store.CreateSession())
             {
-                using (var previousSession = store.CreateSession())
-                {
-                    previousSession.Save(existingWumbo1);
-                    previousSession.Save(existingWumbo2);
-                    previousSession.Save(existingWumbo3);
-                }
-
-                using (var session = store.CreateSession())
-                {
-                    var repository = new WumboRepository(session);
-
-                    var allWumbos = await repository.GetAllAsync();
-
-                    CustomAssert.AllPropertiesMapped(existingWumbo1, allWumbos.First(w => w.Id == existingWumbo1.Id));
-                    CustomAssert.AllPropertiesMapped(existingWumbo2, allWumbos.First(w => w.Id == existingWumbo2.Id));
-                    CustomAssert.AllPropertiesMapped(existingWumbo3, allWumbos.First(w => w.Id == existingWumbo3.Id));
-                }
+                previousSession.Save(existingWumbo1);
+                previousSession.Save(existingWumbo2);
+                previousSession.Save(existingWumbo3);
             }
+
+            using var session = store.CreateSession();
+
+            var repository = new WumboRepository(session);
+
+            var allWumbos = await repository.GetAllAsync();
+
+            CustomAssert.AllPropertiesMapped(existingWumbo1, allWumbos.First(w => w.Id == existingWumbo1.Id));
+            CustomAssert.AllPropertiesMapped(existingWumbo2, allWumbos.First(w => w.Id == existingWumbo2.Id));
+            CustomAssert.AllPropertiesMapped(existingWumbo3, allWumbos.First(w => w.Id == existingWumbo3.Id));
         }
 
         [Fact]
         public async Task GetAllAsync_returns_empty_list_if_no_entries_exist()
         {
-            using (IStore store = await CreateStore())
-            {
-                using (var session = store.CreateSession())
-                {
-                    var repository = new WumboRepository(session);
+            using IStore store = await CreateStore();
+            using var session = store.CreateSession();
 
-                    var allWumbos = await repository.GetAllAsync();
+            var repository = new WumboRepository(session);
 
-                    Assert.Empty(allWumbos);
-                    Assert.NotNull(allWumbos);
-                    Assert.IsType<Wumbo[]>(allWumbos);
-                }
-            }
+            var allWumbos = await repository.GetAllAsync();
+
+            Assert.Empty(allWumbos);
+            Assert.NotNull(allWumbos);
+            Assert.IsAssignableFrom<IEnumerable<Wumbo>>(allWumbos);
         }
 
         [Fact]
@@ -142,38 +135,33 @@ namespace Abi.Test.Data
         {
             var existingWumbo = TestData.Create<Wumbo>();
 
-            using (IStore store = await CreateStore())
+            using IStore store = await CreateStore();
+
+            using (var previousSession = store.CreateSession())
             {
-                using (var previousSession = store.CreateSession())
-                {
-                    previousSession.Save(existingWumbo);
-                }
-
-                using (var session = store.CreateSession())
-                {
-                    var repository = new WumboRepository(session);
-
-                    var wumbo = await repository.GetAsync(existingWumbo.Id);
-
-                    CustomAssert.AllPropertiesMapped(existingWumbo, wumbo);
-                }
+                previousSession.Save(existingWumbo);
             }
+
+            using var session = store.CreateSession();
+
+            var repository = new WumboRepository(session);
+
+            var wumbo = await repository.GetAsync(existingWumbo.Id);
+
+            CustomAssert.AllPropertiesMapped(existingWumbo, wumbo);
         }
 
         [Fact]
         public async Task GetAsync_returns_null_if_id_does_not_exist()
         {
-            using (IStore store = await CreateStore())
-            {
-                using (var session = store.CreateSession())
-                {
-                    var repository = new WumboRepository(session);
+            using IStore store = await CreateStore();
+            using var session = store.CreateSession();
 
-                    var wumbo = await repository.GetAsync(1);
+            var repository = new WumboRepository(session);
 
-                    Assert.Null(wumbo);
-                }
-            }
+            var wumbo = await repository.GetAsync(1);
+
+            Assert.Null(wumbo);
         }
     }
 }

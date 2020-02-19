@@ -13,6 +13,8 @@ namespace Abi.OrchardCore.Data.Indexes
         public string ExperimentId { get; set; }
 
         public string ContentItemid { get; set; }
+
+        public string ContentItemType { get; set; }
     }
 
     public class VariantIndexProvider : IndexProvider<Variant>
@@ -23,7 +25,8 @@ namespace Abi.OrchardCore.Data.Indexes
             {
                 VariantId = v.VariantId,
                 ExperimentId = v.ExperimentId,
-                ContentItemid = v.ContentItemId
+                ContentItemid = v.ContentItemId,
+                ContentItemType = v.ContentItemType,
             });
         }
     }

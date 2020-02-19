@@ -1,15 +1,9 @@
-﻿using Abi.Data;
-using Abi.Models;
+﻿using Abi.Models;
 using Abi.OrchardCore;
-using Abi.Services;
 using Abi.Test.Fixtures;
 using Moq;
-using OrchardCore.ContentManagement;
 using OrchardCore.Flows.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -371,18 +365,22 @@ namespace Abi.Test
             [Fact]
             public async Task Create_variant_if_variant_is_null()
             {
+                string expectedVariantId = "variant123";
                 string expectedExpirimentId = "experimentflowpart123";
                 string expectedContentItemId = "widget2";
+                string expectedContentItemType = "gadget";
                 var flowPart = SampleFlowPart;
 
                 _contentBalancerMock.Setup(m => m.GetRandomIndex(flowPart.Widgets))
                     .Returns(1)
                     .Verifiable();
-                _variantRepositoryMock.Setup(m => m.CreateAsync(expectedExpirimentId, expectedContentItemId))
+                _variantRepositoryMock.Setup(m => m.CreateAsync(expectedExpirimentId, expectedContentItemId, expectedContentItemType))
                     .ReturnsAsync(TestData.Create<Variant>(v =>
                     {
-                        v.VariantId = "variant123";
+                        v.VariantId = expectedVariantId;
+                        v.ExperimentId = expectedExpirimentId;
                         v.ContentItemId = expectedContentItemId;
+                        v.ContentItemType = expectedContentItemType;
                     }))
                     .Verifiable();
                 _cookieServiceMock.Setup(m => m.AddVariantCookie("content", "experimentflowpart123", "variant123"))
@@ -392,8 +390,10 @@ namespace Abi.Test
 
                 Variant actualVariant = await manager.SetVariantAsync(null, flowPart, "content", expectedExpirimentId);
 
-                Assert.Equal(expectedContentItemId, actualVariant.ExperimentId);
+                Assert.Equal(expectedVariantId, actualVariant.VariantId);
+                Assert.Equal(expectedExpirimentId, actualVariant.ExperimentId);
                 Assert.Equal(expectedContentItemId, actualVariant.ContentItemId);
+                Assert.Equal(expectedContentItemType, actualVariant.ContentItemType);
 
                 VerifyMocks();
             }

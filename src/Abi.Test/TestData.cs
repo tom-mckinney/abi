@@ -31,7 +31,7 @@ namespace Abi.Test
 
                 if (propertyType == typeof(string))
                 {
-                    property.SetValue(model, "Very Berry Wumbo");
+                    property.SetValue(model, "Lorem ipsum");
                 }
                 else if (propertyType == typeof(int))
                 {

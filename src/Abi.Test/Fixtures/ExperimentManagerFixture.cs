@@ -44,8 +44,8 @@ namespace Abi.Test.Fixtures
             get
             {
                 var flowPart = new FlowPart { ContentItem = new ContentItem { ContentItemId = "experimentflowpart123" } };
-                flowPart.Widgets.Add(new ContentItem { ContentItemId = "widget1" });
-                flowPart.Widgets.Add(new ContentItem { ContentItemId = "widget2" });
+                flowPart.Widgets.Add(new ContentItem { ContentItemId = "widget1", ContentType = "gizmo" });
+                flowPart.Widgets.Add(new ContentItem { ContentItemId = "widget2", ContentType = "gadget" });
                 return flowPart;
             }
         }

@@ -57,15 +57,17 @@ namespace Abi.OrchardCore
             if (variant == null || !content.Widgets.Any(c => c.ContentItemId == variant.ContentItemId))
             {
                 int variantIndex = _contentBalancer.GetRandomIndex(content.Widgets); // TODO: make this personalized/influenced by history
-                string variantContentId = content.Widgets.ElementAt(variantIndex).ContentItemId;
+                var variantContent = content.Widgets.ElementAt(variantIndex);
 
                 if (variant == null)
                 {
-                    variant = await _variantRepository.CreateAsync(experimentId, variantContentId);
+                    variant = await _variantRepository.CreateAsync(experimentId, variantContent.ContentItemId, variantContent.ContentType);
                 }
                 else
                 {
-                    variant.ContentItemId = variantContentId;
+                    variant.ContentItemId = variantContent.ContentItemId;
+                    variant.ContentItemType = variantContent.ContentType;
+
                     await _variantRepository.UpdateAsync(variant);
                 }
             }
