@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Abi.OrchardCore.Models;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentManagement.Display.ViewModels;
@@ -24,6 +25,11 @@ namespace Abi.OrchardCore.Drivers
 
         public override Task<IDisplayResult> EditAsync(ContentItem model, BuildEditorContext context)
         {
+            if (model.Has<ExperimentVariantPart>())
+            {
+                // TODO
+            }
+
             return base.EditAsync(model, context);
         }
 
