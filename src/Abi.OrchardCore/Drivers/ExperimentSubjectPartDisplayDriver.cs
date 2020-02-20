@@ -10,14 +10,13 @@ using System.Threading.Tasks;
 
 namespace Abi.OrchardCore.Drivers
 {
-    public class ExperimentVariantPartDisplayDriver : ContentPartDisplayDriver<ExperimentVariantPart>
+    public class ExperimentSubjectPartDisplayDriver : ContentPartDisplayDriver<ExperimentSubjectPart>
     {
-        public override IDisplayResult Edit(ExperimentVariantPart part)
+        public override IDisplayResult Edit(ExperimentSubjectPart part, BuildPartEditorContext context)
         {
-            return Initialize<ExperimentVariantViewModel>("ExperimentVariantPart_Edit", model =>
+            return Initialize<ExperimentSubjectPartViewModel>("ExperimentSubjectPart_Edit", model =>
             {
-                model.Title = "Test";
-                model.ExperimentVariantPart = part;
+                model.Title = "Wumbo";
 
                 return Task.CompletedTask;
             });

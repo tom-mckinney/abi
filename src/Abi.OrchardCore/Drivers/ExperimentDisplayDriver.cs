@@ -25,7 +25,7 @@ namespace Abi.OrchardCore.Drivers
 
         public override Task<IDisplayResult> EditAsync(ContentItem model, BuildEditorContext context)
         {
-            if (model.Has<ExperimentVariantPart>())
+            if (model.Has<ExperimentSubjectPart>())
             {
                 // TODO
             }

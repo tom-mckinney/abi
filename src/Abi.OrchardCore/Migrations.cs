@@ -26,6 +26,9 @@ namespace Abi.OrchardCore
 
         public async Task<int> CreateAsync()
         {
+            _contentDefinitionManager.AlterPartDefinition(nameof(ExperimentSubjectPart), part => part
+                .Attachable());
+
             _contentDefinitionManager.AlterTypeDefinition(Constants.Types.Experiment, type => type
                 .Draftable()
                 .Versionable()

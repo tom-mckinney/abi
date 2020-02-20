@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Abi.OrchardCore.ViewModels
 {
-    public class ExperimentVariantViewModel
+    public class ExperimentSubjectPartViewModel
     {
         public string Title { get; set; }
 
         [BindNever]
-        public ExperimentVariantPart ExperimentVariantPart { get; set; }
+        public ExperimentSubjectPart ExperimentVariantPart { get; set; }
     }
 }

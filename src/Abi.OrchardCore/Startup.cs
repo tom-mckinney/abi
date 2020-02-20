@@ -35,8 +35,8 @@ namespace Abi.OrchardCore
             services.AddScoped<IContentPartDisplayDriver, ExperimentFlowPartDisplayDriver>();
 
             // ExperimentVariantPart
-            services.AddSingleton<ContentPart, ExperimentVariantPart>();
-            services.AddScoped<IContentPartDisplayDriver, ExperimentVariantPartDisplayDriver>();
+            services.AddSingleton<ContentPart, ExperimentSubjectPart>();
+            services.AddScoped<IContentPartDisplayDriver, ExperimentSubjectPartDisplayDriver>();
 
             services.AddScoped<IDataMigration, Migrations>();
             services.AddScoped<IPermissionProvider, Permissions>();
