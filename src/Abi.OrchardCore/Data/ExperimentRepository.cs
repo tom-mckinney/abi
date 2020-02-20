@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace Abi.OrchardCore.Data
 {
+    public interface IOrchardExperimentRepository : IExperimentRepository<string>
+    {
+
+    }
+
     public interface IExperimentRepository : IRepository<ContentItem, ContentItem, int>
     {
         Task<ContentItem> GetByContentItemIdAsync(string id);

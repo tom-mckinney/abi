@@ -4,8 +4,12 @@ using System.Text;
 
 namespace Abi.Models
 {
-    public class Experiment : AbiEntity
+    public class Experiment<TKey> : AbiEntity<TKey>
     {
         public string Name { get; set; } = null!;
+    }
+
+    public class Experiment : Experiment<int>
+    {
     }
 }

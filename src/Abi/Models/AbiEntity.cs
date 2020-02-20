@@ -6,15 +6,19 @@ using System.Text;
 
 namespace Abi.Models
 {
-    public abstract class AbiEntity : IEntity<int>
+    public abstract class AbiEntity<TKey> : IEntity<TKey>
     {
         /// <summary>
         /// The primary key in the database. For each entity use an additional string-based logical identifier with a MapIndex
         /// </summary>
-        public int Id { get; set; }
+        public TKey Id { get; set; }
 
         public DateTime? CreatedUtc { get; set; }
 
         public DateTime? ModifiedUtc { get; set; }
+    }
+
+    public abstract class AbiEntity : AbiEntity<int>
+    {
     }
 }
