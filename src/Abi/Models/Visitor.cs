@@ -6,10 +6,10 @@ namespace Abi.Models
 {
     public class Visitor : AbiEntity
     {
-        public string VisitorId { get; set; }
+        public string VisitorId { get; set; } = null!;
 
         public int? UserId { get; set; }
 
-        public virtual IEnumerable<Session> Sessions { get; set; }
+        public IEnumerable<Session> Sessions { get; set; } = null!;
     }
 }

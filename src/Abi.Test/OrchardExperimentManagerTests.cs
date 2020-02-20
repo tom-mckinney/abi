@@ -59,7 +59,7 @@ namespace Abi.Test
                 }
 
                 public bool CalledGetVariantAsync { get; set; }
-                public override Task<Variant> GetVariantAsync(string zone, string experimentId)
+                public override Task<Variant> GetVariantOrDefaultAsync(string zone, string experimentId)
                 {
                     CalledGetVariantAsync = true;
                     return Task.FromResult(Variant);
@@ -292,7 +292,7 @@ namespace Abi.Test
 
                 var manager = CreateExperimentManager();
 
-                var actualVariant = await manager.GetVariantAsync("content", "experimentid123");
+                var actualVariant = await manager.GetVariantOrDefaultAsync("content", "experimentid123");
 
                 Assert.Same(expectedVariant, actualVariant);
 
@@ -313,7 +313,7 @@ namespace Abi.Test
 
                 var manager = CreateExperimentManager();
 
-                var actualVariant = await manager.GetVariantAsync("content", "experimentid123");
+                var actualVariant = await manager.GetVariantOrDefaultAsync("content", "experimentid123");
 
                 Assert.Null(actualVariant);
 
@@ -331,7 +331,7 @@ namespace Abi.Test
 
                 var manager = CreateExperimentManager();
 
-                var actualVariant = await manager.GetVariantAsync("content", "experimentid123");
+                var actualVariant = await manager.GetVariantOrDefaultAsync("content", "experimentid123");
 
                 Assert.Null(actualVariant);
 

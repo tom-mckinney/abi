@@ -6,12 +6,12 @@ namespace Abi.Models
 {
     public class Session : AbiEntity
     {
-        public string SessionId { get; set; }
+        public string SessionId { get; set; } = null!;
 
-        public string VisitorId { get; set; }
+        public string VisitorId { get; set; } = null!;
 
-        public virtual Visitor Visitor { get; set; }
+        public Visitor Visitor { get; set; } = null!;
 
-        public string DeviceName { get; set; }
+        public string? DeviceName { get; set; }
     }
 }

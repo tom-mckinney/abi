@@ -37,12 +37,11 @@ namespace Abi.OrchardCore.Data
             {
                 await connection.OpenAsync();
 
-                using (var transaction = connection.BeginTransaction())
-                {
-                    encounter.Id = await connection.InsertAsync(encounter, transaction);
-                
-                    transaction.Commit();
-                }
+                using var transaction = connection.BeginTransaction();
+
+                encounter.Id = await connection.InsertAsync(encounter, transaction);
+
+                transaction.Commit();
             }
 
             return encounter;
@@ -50,39 +49,34 @@ namespace Abi.OrchardCore.Data
 
         public Task<IEnumerable<Encounter>> GetAllAsync()
         {
-            using (var connection = _dbAccessor.CreateConnection())
-            {
-                connection.Open();
+            using var connection = _dbAccessor.CreateConnection();
 
-                return connection.GetAllAsync<Encounter>();
-            }
+            connection.Open();
+
+            return connection.GetAllAsync<Encounter>();
         }
 
         public Task<Encounter> GetAsync(int id)
         {
-            using (var connection = _dbAccessor.CreateConnection())
-            {
-                connection.Open();
+            using var connection = _dbAccessor.CreateConnection();
 
-                return connection.GetAsync<Encounter>(id);
-            }
+            connection.Open();
+
+            return connection.GetAsync<Encounter>(id);
         }
 
         public async Task<Encounter> GetByPublicIdAsync(string encounterId)
         {
-            using (var connection = _dbAccessor.CreateConnection())
-            {
-                connection.Open();
+            using var connection = _dbAccessor.CreateConnection();
 
-                return (await connection.GetAllAsync<Encounter>()).FirstOrDefault(e => e.EncounterId == encounterId); // TODO: remove after Dapper version resolution
+            connection.Open();
 
-                var dialect = SqlDialectFactory.For(connection);
-                var customTable = dialect.QuoteForTableName(_tablePrefix + Constants.CustomTables.Encounters);
+            return (await connection.GetAllAsync<Encounter>()).FirstOrDefault(e => e.EncounterId == encounterId); // TODO: remove after Dapper version resolution
 
-                var selectCommand = $"SELECT * FROM {customTable} WHERE {dialect.QuoteForColumnName(nameof(Encounter.EncounterId))} = @EncounterId";
+            var dialect = SqlDialectFactory.For(connection);
+            var customTable = dialect.QuoteForTableName(_tablePrefix + Constants.CustomTables.Encounters);
 
-                //return connection.QueryFirstOrDefaultAsync<Encounter>(selectCommand, new { EncounterId = encounterId });
-            }
+            var selectCommand = $"SELECT * FROM {customTable} WHERE {dialect.QuoteForColumnName(nameof(Encounter.EncounterId))} = @EncounterId";
         }
     }
 }

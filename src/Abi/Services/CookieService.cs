@@ -25,13 +25,10 @@ namespace Abi.Services
     public class CookieService : ICookieService
     {
         private readonly HttpContext _httpContext;
-        private readonly IUserRepository _userRepository;
 
-        public CookieService(IHttpContextAccessor httpContextAccessor,
-            IUserRepository userRepository)
+        public CookieService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContext = httpContextAccessor.HttpContext;
-            _userRepository = userRepository;
         }
 
         private void AddCookie(string cookieName, string cookieValue)

@@ -10,7 +10,7 @@ namespace Abi.Data
     public interface IVariantRepository : IRepository<Variant, int>
     {
         Task<Variant> GetByPublicIdAsync(string variantId);
-        Task<Variant> CreateAsync(string experimentId, string contentItemId, string contentItemType = null);
+        Task<Variant> CreateAsync(string experimentId, string contentItemId, string? contentItemType = null);
         Task UpdateAsync(Variant variant);
     }
 }

@@ -10,11 +10,11 @@ namespace Abi.Test.Services
 {
     public class CookieServiceTests
     {
-        HttpContextAccessor _httpContextAccessor = new HttpContextAccessor();
+        private readonly HttpContextAccessor _httpContextAccessor = new HttpContextAccessor();
 
         private ICookieService CreateService()
         {
-            return new CookieService(_httpContextAccessor, null);
+            return new CookieService(_httpContextAccessor);
         }
 
         [Fact]

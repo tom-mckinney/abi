@@ -41,7 +41,7 @@ namespace Abi.OrchardCore
 
             Session session = await GetOrCreateSessionAsync(visitor.VisitorId);
 
-            Variant variant = await GetVariantAsync(zone, experimentId);
+            Variant variant = await GetVariantOrDefaultAsync(zone, experimentId);
 
             variant = await SetVariantAsync(variant, content, zone, experimentId);
 

@@ -34,7 +34,7 @@ namespace Abi.OrchardCore
             services.AddScoped<IContentDisplayDriver, ExperimentDisplayDriver>();
             services.AddScoped<IContentPartDisplayDriver, ExperimentFlowPartDisplayDriver>();
 
-            // ExperimentVariantPart
+            // IContentPartDisplayDriver
             services.AddSingleton<ContentPart, ExperimentSubjectPart>();
             services.AddScoped<IContentPartDisplayDriver, ExperimentSubjectPartDisplayDriver>();
 
@@ -52,7 +52,6 @@ namespace Abi.OrchardCore
             services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<IVariantRepository, VariantRepository>();
             services.AddScoped<IVisitorRepository, VisitorRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IEncounterRepository, EncounterRepository>();
 
             // Liquid Filters

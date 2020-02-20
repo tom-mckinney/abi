@@ -32,7 +32,7 @@ namespace Abi
 
         public virtual async Task<Visitor> GetOrCreateVisitorAsync()
         {
-            Visitor visitor = null;
+            Visitor? visitor = null;
 
             if (_cookieService.TryGetVisitorCookie(out string visitorId))
             {
@@ -53,7 +53,7 @@ namespace Abi
 
         public virtual async Task<Session> GetOrCreateSessionAsync(string visitorId)
         {
-            Session session = null;
+            Session? session = null;
 
             if (_cookieService.TryGetSessionCookie(out string sessionId))
             {
@@ -70,9 +70,9 @@ namespace Abi
             return session;
         }
 
-        public virtual async Task<Variant> GetVariantAsync(string zone, string experimentId)
+        public virtual async Task<Variant?> GetVariantOrDefaultAsync(string zone, string experimentId)
         {
-            Variant variant = null;
+            Variant? variant = null;
 
             if (_cookieService.TryGetVariantCookie(zone, experimentId, out string variantId))
             {

@@ -6,12 +6,12 @@ namespace Abi.Models
 {
     public class Variant : AbiEntity
     {
-        public string VariantId { get; set; }
+        public string VariantId { get; set; } = null!;
 
-        public string ExperimentId { get; set; }
+        public string ExperimentId { get; set; } = null!;
 
-        public string ContentItemId { get; set; }
+        public string ContentItemId { get; set; } = null!;
 
-        public string ContentItemType { get; set; }
+        public string? ContentItemType { get; set; }
     }
 }

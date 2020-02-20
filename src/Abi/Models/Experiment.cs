@@ -6,6 +6,6 @@ namespace Abi.Models
 {
     public class Experiment : AbiEntity
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 }
