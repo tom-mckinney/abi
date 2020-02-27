@@ -3,6 +3,7 @@ using Abi.OrchardCore.Models;
 using Abi.OrchardCore.ViewModels;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentManagement.Display.Models;
+using OrchardCore.DisplayManagement.ModelBinding;
 using OrchardCore.DisplayManagement.Views;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace Abi.OrchardCore.Drivers
         {
             return Initialize<ExperimentSubjectPartViewModel>("ExperimentSubjectPart_Edit", model =>
             {
+                model.Name = part.Name;
+
                 if (!string.IsNullOrEmpty(part.ExperimentId))
                 {
                     _experimentRepository.GetByContentItemIdAsync(part.ExperimentId);
@@ -31,6 +34,13 @@ namespace Abi.OrchardCore.Drivers
 
                 return Task.CompletedTask;
             });
+        }
+
+        public override Task<IDisplayResult> UpdateAsync(ExperimentSubjectPart part, IUpdateModel updater)
+        {
+            updater.TryUpdateModelAsync(part, Prefix);
+            part.Name = "WUMBO";
+            return base.UpdateAsync(part, updater);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Abi.OrchardCore.ViewModels
 {
     public class ExperimentSubjectPartViewModel
     {
+        public string Name { get; set; }
         [BindNever]
         public Experiment Experiment { get; set; }
     }

@@ -3,6 +3,7 @@ using Abi.OrchardCore.Data;
 using Abi.OrchardCore.Data.Indexes;
 using Abi.OrchardCore.Drivers;
 using Abi.OrchardCore.Filters;
+using Abi.OrchardCore.Handlers;
 using Abi.OrchardCore.Models;
 using Abi.Services;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
+using OrchardCore.ContentManagement.Handlers;
 using OrchardCore.Data.Migration;
 using OrchardCore.Liquid;
 using OrchardCore.Modules;
@@ -37,6 +39,7 @@ namespace Abi.OrchardCore
             // IContentPartDisplayDriver
             services.AddSingleton<ContentPart, ExperimentSubjectPart>();
             services.AddScoped<IContentPartDisplayDriver, ExperimentSubjectPartDisplayDriver>();
+            services.AddScoped<IContentPartHandler, ExperimentSubjectPartHandler>();
 
             services.AddScoped<IDataMigration, Migrations>();
             services.AddScoped<IPermissionProvider, Permissions>();

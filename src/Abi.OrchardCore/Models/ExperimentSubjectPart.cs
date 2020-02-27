@@ -8,6 +8,7 @@ namespace Abi.OrchardCore.Models
 {
     public class ExperimentSubjectPart : ContentPart
     {
+        public string Name { get; set; }
         public string ExperimentId { get; set; }
     }
 }
