@@ -1,4 +1,5 @@
-﻿using Abi.OrchardCore.Data;
+﻿using Abi.Models;
+using Abi.OrchardCore.Data;
 using Abi.OrchardCore.Models;
 using Abi.OrchardCore.ViewModels;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
@@ -23,9 +24,10 @@ namespace Abi.OrchardCore.Drivers
 
         public override IDisplayResult Edit(ExperimentSubjectPart part, BuildPartEditorContext context)
         {
-            return Initialize<ExperimentSubjectPartViewModel>("ExperimentSubjectPart_Edit", model =>
+            return Initialize<ExperimentSubjectPartEditViewModel>("ExperimentSubjectPart_Edit", model =>
             {
-                model.Name = part.Name;
+                model.ExperimentId = part.ExperimentId;
+                model.ExperimentName = part.Name;
 
                 if (!string.IsNullOrEmpty(part.ExperimentId))
                 {
@@ -36,11 +38,23 @@ namespace Abi.OrchardCore.Drivers
             });
         }
 
-        public override Task<IDisplayResult> UpdateAsync(ExperimentSubjectPart part, IUpdateModel updater)
+        public override async Task<IDisplayResult> UpdateAsync(ExperimentSubjectPart part, IUpdateModel updater)
         {
-            updater.TryUpdateModelAsync(part, Prefix);
-            part.Name = "WUMBO";
-            return base.UpdateAsync(part, updater);
+            var viewModel = new ExperimentSubjectPartEditViewModel();
+
+            if (await updater.TryUpdateModelAsync(viewModel, Prefix))
+            {
+                if (viewModel.CreateNewExperiment == true)
+                {
+                    var experiment = await _experimentRepository.CreateAsync(viewModel.ExperimentName);
+
+                    part.ExperimentId = experiment.ExperimentId;
+                }
+
+                part.Name = viewModel.ExperimentName;
+            }
+
+            return Edit(part);
         }
     }
 }

@@ -1,5 +1,12 @@
-﻿@model ExperimentSubjectPartViewModel
+﻿@model ExperimentSubjectPartEditViewModel
 @{
 }
 
-<input asp-for="@Model.Name" />
+<fieldset class="form-group">
+    <button class="btn btn-sm btn-outline-secondary" type="button">
+        <i class="fas fa-plus"></i>
+    </button>
+    <input type="checkbox" asp-for="@Model.CreateNewExperiment" />
+    <input asp-for="@Model.ExperimentName" />
+    <input asp-for="@Model.ExperimentId" readonly />
+</fieldset>

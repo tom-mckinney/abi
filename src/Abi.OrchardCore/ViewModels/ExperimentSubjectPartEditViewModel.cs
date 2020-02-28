@@ -7,9 +7,14 @@ using System.Text;
 
 namespace Abi.OrchardCore.ViewModels
 {
-    public class ExperimentSubjectPartViewModel
+    public class ExperimentSubjectPartEditViewModel
     {
-        public string Name { get; set; }
+        public bool? CreateNewExperiment { get; set; }
+
+        public string ExperimentName { get; set; }
+
+        public string ExperimentId { get; set; }
+
         [BindNever]
         public Experiment Experiment { get; set; }
     }

@@ -1,19 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abi", "Abi\Abi.csproj", "{FA920ED5-F0C7-44C2-BCDC-1E1FE1C61C82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abi", "Abi\Abi.csproj", "{FA920ED5-F0C7-44C2-BCDC-1E1FE1C61C82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abi.Test", "Abi.Test\Abi.Test.csproj", "{C91C37DC-3BBC-40DC-8041-5616ABCA2EAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abi.Test", "Abi.Test\Abi.Test.csproj", "{C91C37DC-3BBC-40DC-8041-5616ABCA2EAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abi.OrchardCore", "Abi.OrchardCore\Abi.OrchardCore.csproj", "{C61DA361-6E51-4610-AC23-00EC6080AB68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abi.OrchardCore", "Abi.OrchardCore\Abi.OrchardCore.csproj", "{C61DA361-6E51-4610-AC23-00EC6080AB68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{4E40AC89-1BF3-4BDC-9949-BC775F31146E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicCms", "Samples\BasicCms\BasicCms.csproj", "{157A50ED-B3CF-4B58-8AC3-4C6B24D2B5A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicCms", "Samples\BasicCms\BasicCms.csproj", "{157A50ED-B3CF-4B58-8AC3-4C6B24D2B5A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abi.Web", "Abi.Web\Abi.Web.csproj", "{492409EF-04DC-41C2-8ED6-B53E90E56C15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abi.Web", "Abi.Web\Abi.Web.csproj", "{492409EF-04DC-41C2-8ED6-B53E90E56C15}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abi.OrchardCore.Test", "Abi.OrchardCore.Test\Abi.OrchardCore.Test.csproj", "{4939CA71-74AD-4F04-B770-B68A1A60A8D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,9 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FA920ED5-F0C7-44C2-BCDC-1E1FE1C61C82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -88,8 +87,26 @@ Global
 		{492409EF-04DC-41C2-8ED6-B53E90E56C15}.Release|x64.Build.0 = Release|Any CPU
 		{492409EF-04DC-41C2-8ED6-B53E90E56C15}.Release|x86.ActiveCfg = Release|Any CPU
 		{492409EF-04DC-41C2-8ED6-B53E90E56C15}.Release|x86.Build.0 = Release|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Debug|x64.Build.0 = Debug|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Debug|x86.Build.0 = Debug|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Release|x64.ActiveCfg = Release|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Release|x64.Build.0 = Release|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Release|x86.ActiveCfg = Release|Any CPU
+		{4939CA71-74AD-4F04-B770-B68A1A60A8D3}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{157A50ED-B3CF-4B58-8AC3-4C6B24D2B5A0} = {4E40AC89-1BF3-4BDC-9949-BC775F31146E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7B74343-55BF-4460-8E70-310F073D7F83}
 	EndGlobalSection
 EndGlobal
